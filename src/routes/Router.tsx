@@ -1,0 +1,25 @@
+import { Routes, Route } from "react-router-dom";
+import { Top } from "../compornents/pages/Top";
+import { SignIn } from "../compornents/pages/SignIn";
+import { SignUp } from "../compornents/pages/Signup";
+import { PostShowPage } from "../compornents/pages/PostShowPage";
+import { PostPage } from "../compornents/pages/PostPage";
+import { CommentsPage } from "../compornents/pages/CommentPage";
+import { Page404 } from "../compornents/pages/Page404";
+import { HeaderLayout } from "../compornents/templates/HeaderLayout";
+
+export const Router = () => {
+  return (
+    <HeaderLayout>
+      <Routes>
+        <Route path="/" element={<Top />} />
+        <Route path="/sign_in" element={<SignIn />} />
+        <Route path="/sign_up" element={<SignUp />} />
+        <Route path="/post_show_page" element={<PostShowPage />} />
+        <Route path="/post_page" element={<PostPage />} />
+        <Route path="/comment_page" element={<CommentsPage />} />
+        <Route path="*" element={<Page404 />} />
+      </Routes>
+    </HeaderLayout>
+  );
+};
