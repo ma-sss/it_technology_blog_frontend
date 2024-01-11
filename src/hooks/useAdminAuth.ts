@@ -2,9 +2,15 @@ import { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import axios from "axios";
+import { useSetRecoilState } from "recoil";
+
+import { adminInfo } from "../store/adminInfo";
 
 export const useAdminAuth = () => {
     const navigate = useNavigate();
+
+    const setAdminId = useSetRecoilState(adminInfo);
+
     const login = useCallback(
         (email: string, password: string) => {
             axios
@@ -17,7 +23,7 @@ export const useAdminAuth = () => {
                     { withCredentials: true }
                 )
                 .then((res) => {
-                    console.log(res);
+                    console.log(res.data.data.id);
 
                     const accessToken = res.headers["access-token"];
                     const client = res.headers["client"];
@@ -27,11 +33,13 @@ export const useAdminAuth = () => {
                     Cookies.set("client", client);
                     Cookies.set("uid", uid);
 
+                    setAdminId(res.data.data.id)
+                    
                     navigate("/");
                 })
-                .catch((res) => console.log(res));
+                .catch((error) => console.log(error));
         },
-        [navigate]
+        [navigate, setAdminId]
     );
     return { login };
 };

@@ -1,10 +1,13 @@
 import { FC } from "react";
 import { useNavigate } from "react-router-dom";
 import { Box, Flex, Heading, Link } from "@chakra-ui/react";
+import { useSignOut } from "../../hooks/useSignOut";
 
 // memo必要と思われる
 export const Header: FC = () => {
     const navigate = useNavigate();
+
+    const {signOut} = useSignOut();
 
     return (
         <Flex
@@ -35,7 +38,7 @@ export const Header: FC = () => {
                 <Box pr={4}>
                     <Link onClick={() => navigate("/post_page")}>投稿ページ</Link>
                 </Box>
-                <Link>SignOut</Link>
+                <Link onClick={() => signOut()}>SignOut</Link>
             </Flex>
         </Flex>
     );

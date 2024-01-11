@@ -2,6 +2,7 @@ import { FC, memo, useEffect, useState } from "react";
 import axios from "axios";
 import { post } from "../../types/post";
 import { Box, Link, VStack } from "@chakra-ui/react";
+
 import { usePostVerification } from "../../hooks/usePostVerification";
 
 export const Top: FC = memo(() => {
