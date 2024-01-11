@@ -2,14 +2,14 @@ import { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import axios from "axios";
-import { useSetRecoilState } from "recoil";
+import { useRecoilState } from "recoil";
 
 import { adminInfo } from "../store/adminInfo";
 
 export const useAdminAuth = () => {
     const navigate = useNavigate();
 
-    const setAdminId = useSetRecoilState(adminInfo);
+    const [adminId, setAdminId] = useRecoilState(adminInfo);
 
     const login = useCallback(
         (email: string, password: string) => {
@@ -33,7 +33,7 @@ export const useAdminAuth = () => {
                     Cookies.set("client", client);
                     Cookies.set("uid", uid);
 
-                    setAdminId(res.data.data.id)
+                    setAdminId({id: res.data.data.id});
                     
                     navigate("/");
                 })
