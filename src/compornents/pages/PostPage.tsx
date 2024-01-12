@@ -1,7 +1,7 @@
 import { Box, Button, Input, Textarea } from "@chakra-ui/react";
 import axios from "axios";
 import Cookies from "js-cookie";
-import { ChangeEvent, FC, memo, useState } from "react";
+import { ChangeEvent, FC, memo, useCallback, useState } from "react";
 import { useRecoilValue } from "recoil";
 
 import { adminInfo } from "../../store/adminInfo";
@@ -19,7 +19,7 @@ export const PostPage: FC = memo(() => {
     const client = Cookies.get("client");
     const uid = Cookies.get("uid");
 
-    const handlePostSubmit = () => {
+    const handlePostSubmit = useCallback(() => {
         axios.post(
             `http://localhost:3000/api/v1/admin/${adminId}/posts`,
             {
@@ -38,7 +38,7 @@ export const PostPage: FC = memo(() => {
             console.log(res);
             navigate("/");
         }).catch((error) => console.log(error));
-    };
+    },[accessToken, adminId, client, content, navigate, title, uid]);
 
     return (
         <Box p={4}>

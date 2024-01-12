@@ -1,17 +1,18 @@
-import { FC, useEffect } from "react";
+import { FC, memo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Box, Flex, Heading, Link } from "@chakra-ui/react";
 import { useSignOut } from "../../hooks/useSignOut";
 import { useRecoilValue } from "recoil";
 import { adminInfo } from "../../store/adminInfo";
 
-// memo必要と思われる
-export const Header: FC = () => {
+export const Header: FC = memo(() => {
     const navigate = useNavigate();
 
     const { signOut } = useSignOut();
 
     const adminId = useRecoilValue(adminInfo);
+
+    console.log(adminId?.id);
 
     return (
         <Flex
@@ -37,7 +38,7 @@ export const Header: FC = () => {
                 flexGrow={2}
                 display={{ base: "none", md: "flex" }}
             >
-                {adminId.id ? (
+                {adminId?.id ? (
                     <Flex>
                         <Box pr={4}>
                             <Link onClick={() => navigate("/post_page")}>
@@ -58,4 +59,4 @@ export const Header: FC = () => {
             </Flex>
         </Flex>
     );
-};
+});

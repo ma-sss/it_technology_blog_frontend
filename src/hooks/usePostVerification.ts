@@ -3,12 +3,12 @@ import { useNavigate } from "react-router-dom";
 import { useSetRecoilState } from "recoil";
 import axios from "axios";
 
-import { showPostState } from "../store/showPostState";
+import { showPostInfo } from "../store/showPostInfo";
 
 export const usePostVerification = () => {
     const navigate = useNavigate();
 
-    const setPostInfo = useSetRecoilState(showPostState);
+    const setPostInfo = useSetRecoilState(showPostInfo);
 
     const Verification = useCallback(
         (post_id: number) => {

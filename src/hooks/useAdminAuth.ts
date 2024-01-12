@@ -1,15 +1,15 @@
 import { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
+import { useSetRecoilState } from "recoil";
 import Cookies from "js-cookie";
 import axios from "axios";
-import { useRecoilState } from "recoil";
 
 import { adminInfo } from "../store/adminInfo";
 
 export const useAdminAuth = () => {
     const navigate = useNavigate();
 
-    const [adminId, setAdminId] = useRecoilState(adminInfo);
+    const setAdminId = useSetRecoilState(adminInfo);
 
     const login = useCallback(
         (email: string, password: string) => {
