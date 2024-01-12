@@ -6,21 +6,22 @@ import axios from "axios";
 import { showPostInfo } from "../../store/showPostInfo";
 import { adminInfo } from "../../store/adminInfo";
 import Cookies from "js-cookie";
+import { comment } from "../../types/comment";
 
 export const PostShowPage: FC = memo(() => {
     const [name, setName] = useState("");
     const [text, setText] = useState("");
-    const [comments, setComments] = useState<Array<any>>([]);
+
+    const [comments, setComments] = useState<Array<comment>>([]);
 
     const postInfo = useRecoilValue(showPostInfo);
     const adminId = useRecoilValue(adminInfo);
-
-    console.log(comments);
 
     const accessToken = Cookies.get("access-token");
     const client = Cookies.get("client");
     const uid = Cookies.get("uid");
 
+    // 選んだpostに対してのコメントを全て取得
     useEffect(() => {
         axios
             .get(
@@ -102,7 +103,7 @@ export const PostShowPage: FC = memo(() => {
                         </Box>
                     ) : (
                         <Box key={index} bg="gray.100" p={4} borderRadius="md">
-                            <p>ユーザーコメント</p>
+                            <p>{`ユーザーネーム: ${comment.user_name}`}</p>
                             <Text>{comment.text}</Text>
                         </Box>
                     )
@@ -147,7 +148,10 @@ export const PostShowPage: FC = memo(() => {
                         }
                     />
                     {}
-                    <Button colorScheme="teal" onClick={handleUsercommentSubmit}>
+                    <Button
+                        colorScheme="teal"
+                        onClick={handleUsercommentSubmit}
+                    >
                         投稿する
                     </Button>
                 </Box>
