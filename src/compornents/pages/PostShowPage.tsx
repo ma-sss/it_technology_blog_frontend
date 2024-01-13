@@ -1,18 +1,22 @@
 import { ChangeEvent, FC, memo, useCallback, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
-import { Box, Button, Input, Text, Textarea, VStack } from "@chakra-ui/react";
+import { Box, Button, Input, Link, Text, Textarea, VStack } from "@chakra-ui/react";
 import axios from "axios";
 
 import { showPostInfo } from "../../store/showPostInfo";
 import { adminInfo } from "../../store/adminInfo";
 import Cookies from "js-cookie";
 import { comment } from "../../types/comment";
+import { useFetchComment } from "../../hooks/useFetchComment";
 
 export const PostShowPage: FC = memo(() => {
     const [name, setName] = useState("");
     const [text, setText] = useState("");
 
     const [comments, setComments] = useState<Array<comment>>([]);
+
+    const {FetchComment} = useFetchComment();
 
     const postInfo = useRecoilValue(showPostInfo);
     const adminId = useRecoilValue(adminInfo);
@@ -96,17 +100,32 @@ export const PostShowPage: FC = memo(() => {
                     コメント一覧
                 </Text>
                 {comments.map((comment, index) =>
-                    comment.admin_id ? (
-                        <Box key={index} bg="green.100" p={4} borderRadius="md">
-                            <p>管理者コメント</p>
-                            <Text>{comment.text}</Text>
-                        </Box>
+                    adminId.id ? (
+                        comment.admin_id ? (
+                            <Link onClick={() => FetchComment(comment.user_id, comment.id)} key={index} bg="green.100" p={4} borderRadius="md">
+                                <p>管理者コメント</p>
+                                <Text>{comment.text}</Text>
+                            </Link>
+                        ) : (
+                            <Link onClick={() => FetchComment(comment.user_id, comment.id)} key={index} bg="gray.100" p={4} borderRadius="md">
+                                <p>{`ユーザーネーム: ${comment.user_name}`}</p>
+                                <Text>{comment.text}</Text>
+                            </Link>
+                        )
                     ) : (
-                        <Box key={index} bg="gray.100" p={4} borderRadius="md">
-                            <p>{`ユーザーネーム: ${comment.user_name}`}</p>
-                            <Text>{comment.text}</Text>
-                        </Box>
+                        comment.admin_id ? (
+                            <Box onClick={() => FetchComment(comment.user_id, comment.id)} key={index} bg="green.100" p={4} borderRadius="md">
+                                <p>管理者コメント</p>
+                                <Text>{comment.text}</Text>
+                            </Box>
+                        ) : (
+                            <Box onClick={() => FetchComment(comment.user_id, comment.id)} key={index} bg="gray.100" p={4} borderRadius="md">
+                                <p>{`ユーザーネーム: ${comment.user_name}`}</p>
+                                <Text>{comment.text}</Text>
+                            </Box>
+                        )
                     )
+                    
                 )}
             </VStack>
             {adminId.id ? (
