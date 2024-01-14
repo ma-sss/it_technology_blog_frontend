@@ -5,6 +5,6 @@ const { persistAtom } = recoilPersist();
 
 export const showCommentInfo = atom({
     key: "showCommentInfo",
-    default: { id: null, text: "" },
+    default: { id: null, user_name: "", text: "" },
     effects_UNSTABLE: [persistAtom],
 });
