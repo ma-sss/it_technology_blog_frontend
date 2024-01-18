@@ -50,16 +50,36 @@ export const CommentAndReplyPage: FC = memo(() => {
                     コメント
                 </Text>
             </Box>
-            {commentInfo.admin_id !== null ? (
+            {adminId.id !== null ? (
+                // 管理者のためのリンク
                 <Link onClick={() => navigate("/comment_edit_page")}>
-                    <p>管理者</p>
-                    <p>{`コメント: ${commentInfo.text}`}</p>
+                    {commentInfo.admin_id !== null ? (
+                        <>
+                            <p>管理者</p>
+                            <p>{`コメント: ${commentInfo.text}`}</p>
+                        </>
+                    ) : (
+                        <>
+                            <p>{`ユーザーネーム: ${commentInfo.user_name}`}</p>
+                            <p>{`コメント: ${commentInfo.text}`}</p>
+                        </>
+                    )}
                 </Link>
             ) : (
-                <Link onClick={() => navigate("/comment_edit_page")}>
-                    <p>{`ユーザーネーム: ${commentInfo.user_name}`}</p>
-                    <p>{`コメント: ${commentInfo.text}`}</p>
-                </Link>
+                // 一般ユーザーのための表示
+                <Box>
+                    {commentInfo.admin_id !== null ? (
+                        <Box>
+                            <Text>管理者</Text>
+                            <Text>{`コメント: ${commentInfo.text}`}</Text>
+                        </Box>
+                    ) : (
+                        <Box>
+                            <Text>{`ユーザーネーム: ${commentInfo.user_name}`}</Text>
+                            <Text>{`コメント: ${commentInfo.text}`}</Text>
+                        </Box>
+                    )}
+                </Box>
             )}
 
             <Text p={4} fontSize="xl" fontWeight="bold">
@@ -68,53 +88,76 @@ export const CommentAndReplyPage: FC = memo(() => {
 
             {replies.map((reply) => (
                 <div key={reply.id}>
-                    {reply.comment_id === commentInfo.id && (
-                        <div>
-                            {reply.user_id ? ( // ユーザーreplyの場合
-                                <Link
-                                    onClick={() => {
-                                        //user.idとreply.user_idが同じならsetReplyInfoにcommentedUser.idを入れる
-                                        const repliedUser = users.find(
-                                            (user) => user.id === reply.user_id
-                                        );
-                                        if (repliedUser) {
-                                            navigate("/reply_edit_page");
-                                            setReplyInfo({
-                                                id: reply.id,
-                                                user_id: reply.user_id,
-                                                admin_id: null,
-                                                user_name: repliedUser.name,
-                                                text: reply.text,
-                                            });
-                                        }
-                                    }}
-                                >
-                                    <p>{`ユーザーネーム: ${
-                                        users.find(
-                                            (user) => user.id === reply.user_id
-                                        )?.name
-                                    }`}</p>
-                                    <p>{`コメント内容: ${reply.text}`}</p>
-                                </Link>
-                            ) : reply.admin_id !== null ? ( // 管理者コメントの場合
-                                <Link
-                                    onClick={() => {
-                                        navigate("/reply_edit_page");
-                                        setReplyInfo({
-                                            id: reply.id,
-                                            user_id: null,
-                                            admin_id: reply.admin_id,
-                                            user_name: "",
-                                            text: reply.text,
-                                        });
-                                    }}
-                                >
-                                    <p>管理者</p>
-                                    <p>{`コメント内容: ${reply.text}`}</p>
-                                </Link>
-                            ) : null}
-                        </div>
-                    )}
+                    {adminId.id !== null
+                        ? reply.comment_id === commentInfo.id && (
+                              <div>
+                                  {reply.user_id ? ( // ユーザーreplyの場合
+                                      <Link
+                                          onClick={() => {
+                                              const repliedUser = users.find(
+                                                  (user) =>
+                                                      user.id === reply.user_id
+                                              );
+                                              if (repliedUser) {
+                                                  navigate("/reply_edit_page");
+                                                  setReplyInfo({
+                                                      id: reply.id,
+                                                      user_id: reply.user_id,
+                                                      admin_id: null,
+                                                      user_name:
+                                                          repliedUser.name,
+                                                      text: reply.text,
+                                                  });
+                                              }
+                                          }}
+                                      >
+                                          <p>{`ユーザーネーム: ${
+                                              users.find(
+                                                  (user) =>
+                                                      user.id === reply.user_id
+                                              )?.name
+                                          }`}</p>
+                                          <p>{`返信内容: ${reply.text}`}</p>
+                                      </Link>
+                                  ) : reply.admin_id !== null ? ( // 管理者コメントの場合
+                                      <Link
+                                          onClick={() => {
+                                              navigate("/reply_edit_page");
+                                              setReplyInfo({
+                                                  id: reply.id,
+                                                  user_id: null,
+                                                  admin_id: reply.admin_id,
+                                                  user_name: "",
+                                                  text: reply.text,
+                                              });
+                                          }}
+                                      >
+                                          <p>管理者</p>
+                                          <p>{`返信内容: ${reply.text}`}</p>
+                                      </Link>
+                                  ) : null}
+                              </div>
+                          )
+                        : reply.comment_id === commentInfo.id && (
+                              <div>
+                                  {reply.user_id ? ( // ユーザーreplyの場合
+                                      <Box>
+                                          <p>{`ユーザーネーム: ${
+                                              users.find(
+                                                  (user) =>
+                                                      user.id === reply.user_id
+                                              )?.name
+                                          }`}</p>
+                                          <p>{`返信内容: ${reply.text}`}</p>
+                                      </Box>
+                                  ) : reply.admin_id !== null ? ( // 管理者コメントの場合
+                                      <Box>
+                                          <p>管理者</p>
+                                          <p>{`返信内容: ${reply.text}`}</p>
+                                      </Box>
+                                  ) : null}
+                              </div>
+                          )}
                 </div>
             ))}
 

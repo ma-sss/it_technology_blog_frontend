@@ -1,17 +1,31 @@
-import { ChangeEvent, memo } from "react";
-import { useRecoilState } from "recoil";
+import { ChangeEvent, memo, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { Button, Flex, Input, Text } from "@chakra-ui/react";
+
 import { showReplyInfo } from "../../store/showReplyInfo";
 import { PrimaryButton } from "../atoms/button/PrimaryButton";
-import { Button, Flex, Input, Text } from "@chakra-ui/react";
 import { useHandleReplyDelete } from "../../hooks/reply/useHandleReplyDelete";
 import { useHandleReplyEdit } from "../../hooks/reply/useHandleReplyEdit";
 import { replyInfoType } from "../../types/replyInfoType";
+import { adminInfo } from "../../store/adminInfo";
 
 export const ReplyEditPage = memo(() => {
     const [replyInfo, setReplyInfo] = useRecoilState(showReplyInfo);
+    const adminId = useRecoilValue(adminInfo);
+
+    const navigate = useNavigate();
 
     const { HandleReplyEdit } = useHandleReplyEdit();
     const { HandleReplyDelete } = useHandleReplyDelete();
+
+    useEffect(() => {
+        // adminId.id が null の場合はログインページにリダイレクト
+        if (adminId.id === null) {
+            alert('ログインしてください'); // ダイアログやモーダルなど適切な形でログイン通知を表示する
+            navigate("/sign_in"); // ログインページへリダイレクト
+        }
+    }, [adminId.id,navigate]);
 
     return (
         <>

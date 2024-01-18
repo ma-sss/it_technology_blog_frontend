@@ -1,5 +1,6 @@
-import { ChangeEvent, FC, memo } from "react";
-import { useRecoilState } from "recoil";
+import { ChangeEvent, FC, memo, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { Box, Button, Flex, Input, Text } from "@chakra-ui/react";
 
 import { PrimaryButton } from "../atoms/button/PrimaryButton";
@@ -7,12 +8,24 @@ import { useHandleCommentEdit } from "../../hooks/comment/useHandleCommentEdit";
 import { useHandleCommentDelete } from "../../hooks/comment/useHandleCommentDelete";
 import { showCommentInfo } from "../../store/showCommentInfo";
 import { commentInfoType } from "../../types/commentInfoType";
+import { adminInfo } from "../../store/adminInfo";
 
 export const CommentEditPage: FC = memo(() => {
     const [commentInfo, setCommentInfo] = useRecoilState(showCommentInfo);
+    const adminId = useRecoilValue(adminInfo);
+
+    const navigate = useNavigate();
 
     const { HandleCommentEdit } = useHandleCommentEdit();
     const { HandleCommentDelete } = useHandleCommentDelete();
+
+    useEffect(() => {
+        // adminId.id が null の場合はログインページにリダイレクト
+        if (adminId.id === null) {
+            alert('ログインしてください'); // ダイアログやモーダルなど適切な形でログイン通知を表示する
+            navigate("/sign_in"); // ログインページへリダイレクト
+        }
+    }, [adminId.id,navigate]);
 
     return (
         <Box p={4}>
