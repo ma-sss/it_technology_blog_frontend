@@ -1,10 +1,10 @@
 import axios from "axios";
 import { Dispatch, SetStateAction, useCallback } from "react";
-import { comment } from "../types/comment";
+import { comment } from "../../types/comment";
 import Cookies from "js-cookie";
 
 type Props = {
-    postInfo: { post_id: number; title: string; content: string };
+    postInfo: { id: number; title: string; content: string };
     text: string;
     setText: Dispatch<SetStateAction<string>>;
     setComments: Dispatch<SetStateAction<comment[]>>;
@@ -22,10 +22,9 @@ export const useHandleAdmincommentSubmit = () => {
 
         axios
             .post(
-                `http://localhost:3000/api/v1/admin/${adminId.id}/comments`,
+                `http://localhost:3000/api/v1/admin/${adminId.id}/comment`,
                 {
-                    post_id: postInfo.post_id,
-                    admin_id: adminId.id,
+                    post_id: postInfo.id,
                     text: text,
                 },
                 {
@@ -40,11 +39,11 @@ export const useHandleAdmincommentSubmit = () => {
                 console.log(res);
                 axios
                     .get(
-                        `http://localhost:3000/api/v1/user/${postInfo.post_id}/comments`
+                        `http://localhost:3000/api/v1/user/comments`
                     )
                     .then((res) => setComments(res.data.data))
                     .catch((res) => console.log(res));
-                setText("");
+                    setText("");
             })
             .catch((error) => console.log(error));
     }, []);

@@ -21,7 +21,7 @@ export const PostPage: FC = memo(() => {
 
     const handlePostSubmit = useCallback(() => {
         axios.post(
-            `http://localhost:3000/api/v1/admin/${adminId}/posts`,
+            `http://localhost:3000/api/v1/admin/${adminId.id}/post`,
             {
                 admin_id: adminId,
                 title: title,

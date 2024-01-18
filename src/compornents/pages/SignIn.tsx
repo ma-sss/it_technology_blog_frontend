@@ -2,7 +2,7 @@ import { ChangeEvent, FC, memo, useState } from "react";
 import { Box, Divider, Flex, Heading, Input, Stack } from "@chakra-ui/react";
 
 import { PrimaryButton } from "../atoms/button/PrimaryButton";
-import { useAdminAuth } from "../../hooks/useAdminAuth";
+import { useAdminAuth } from "../../hooks/adminSession/useAdminAuth";
 
 export const SignIn: FC = memo(() => {
     const [email, setEmail] = useState("");

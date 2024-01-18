@@ -1,8 +1,8 @@
-import { Box } from "@chakra-ui/react";
+import { Box, Button } from "@chakra-ui/react";
 import { ChangeEvent, Dispatch, FC, SetStateAction, memo } from "react";
-import { PrimaryTextarea } from "../atoms/PrimaryTextarea";
-import { PrimaryButton } from "../atoms/button/PrimaryButton";
-import { PrimaryInput } from "../atoms/PrimaryInput";
+import { PrimaryTextarea } from "../../atoms/PrimaryTextarea";
+import { PrimaryButton } from "../../atoms/button/PrimaryButton";
+import { PrimaryInput } from "../../atoms/PrimaryInput";
 
 type Props = {
     name: string;
@@ -21,7 +21,8 @@ export const UserCommentInput: FC<Props> = memo((props) => {
                 placeholder="名前"
                 value={name}
                 onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                    setName(e.target.value)}
+                    setName(e.target.value)
+                }
             />
             <PrimaryTextarea
                 placeholder="コメント"
@@ -30,8 +31,16 @@ export const UserCommentInput: FC<Props> = memo((props) => {
                     setText(e.target.value)
                 }
             />
-            <PrimaryButton onClick={onClick}>
+            <Button
+                colorScheme="teal"
+                variant="outline"
+                mr={4}
+                onClick={onClick}
+            >
                 投稿する
+            </Button>
+            <PrimaryButton onClick={() => window.history.back()}>
+                戻る
             </PrimaryButton>
         </Box>
     );

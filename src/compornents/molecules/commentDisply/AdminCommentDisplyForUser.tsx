@@ -1,7 +1,7 @@
 import { FC, memo } from "react";
 import { Box, Link, Text } from "@chakra-ui/react";
 
-import { comment } from "../../types/comment";
+import { comment } from "../../../types/comment";
 
 type Props = {
     key: number;
@@ -9,21 +9,20 @@ type Props = {
     onClick: () => void;
 };
 
-export const AdminCommentDisplyForAdmin: FC<Props> = memo((props) => {
+export const AdminCommentDisplyForUser: FC<Props> = memo((props) => {
     const { key, comment, onClick } = props;
     return (
-        <Box
-        key={key}
-        bg="green.100"
-        p={4}
-        borderRadius="md"
-    >
         <Link
+            as={Box}
+            key={key}
+            bg="green.100"
+            p={4}
+            borderRadius="md"
+            _hover={{ textDecoration: "none", bg: "green.200" }}
             onClick={onClick}
         >
-            <p>管理者コメント</p>
+            <Text>管理者コメント</Text>
             <Text>{comment.text}</Text>
         </Link>
-    </Box>
     );
 });

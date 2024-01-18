@@ -1,7 +1,7 @@
 import { FC, memo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Box, Flex, Heading, Link } from "@chakra-ui/react";
-import { useSignOut } from "../../hooks/useSignOut";
+import { useSignOut } from "../../hooks/adminSession/useSignOut";
 import { useRecoilValue } from "recoil";
 import { adminInfo } from "../../store/adminInfo";
 
@@ -11,8 +11,6 @@ export const Header: FC = memo(() => {
     const { signOut } = useSignOut();
 
     const adminId = useRecoilValue(adminInfo);
-
-    console.log(adminId?.id);
 
     return (
         <Flex

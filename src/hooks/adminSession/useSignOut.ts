@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useSetRecoilState } from "recoil";
 import Cookies from "js-cookie";
 
-import { adminInfo } from "../store/adminInfo";
+import { adminInfo } from "../../store/adminInfo";
 import axios from "axios";
 
 export const useSignOut = () => {

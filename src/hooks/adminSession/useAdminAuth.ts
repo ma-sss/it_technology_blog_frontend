@@ -4,7 +4,7 @@ import { useSetRecoilState } from "recoil";
 import Cookies from "js-cookie";
 import axios from "axios";
 
-import { adminInfo } from "../store/adminInfo";
+import { adminInfo } from "../../store/adminInfo";
 
 export const useAdminAuth = () => {
     const navigate = useNavigate();

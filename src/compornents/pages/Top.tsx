@@ -2,13 +2,17 @@ import { FC, memo, useEffect, useState } from "react";
 import axios from "axios";
 import { post } from "../../types/post";
 import { Box, Link, VStack } from "@chakra-ui/react";
+import { useNavigate } from "react-router-dom";
 
-import { usePostVerification } from "../../hooks/usePostVerification";
+import { showPostInfo } from "../../store/showPostInfo";
+import { useSetRecoilState } from "recoil";
 
 export const Top: FC = memo(() => {
     const [posts, setPosts] = useState<Array<post>>([]);
 
-    const { Verification } = usePostVerification();
+    const navigate = useNavigate();
+
+    const setPostInfo = useSetRecoilState(showPostInfo)
 
     useEffect(() => {
         axios
@@ -28,7 +32,10 @@ export const Top: FC = memo(() => {
                         <Link
                             key={post.id}
                             fontSize="lg"
-                            onClick={() => Verification(post.id)}
+                            onClick={() => {
+                                setPostInfo({id: post.id, title: post.title, content: post.content})
+                                navigate("/post_and_comment_page");    
+                            }}
                         >
                             {post.title}
                         </Link>
