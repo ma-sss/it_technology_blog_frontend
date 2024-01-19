@@ -30,11 +30,27 @@ export const Top: FC = memo(() => {
 
     return (
         <Box p={4}>
-            <VStack spacing={4} align="start">
-                <Box as="p" fontSize="2xl" fontWeight="bold">
-                    投稿一覧
-                </Box>
-                <VStack align="start">
+            <VStack spacing={4} align="center">
+                <Text fontSize="2xl" fontWeight="bold">
+                    ようこそ!IT技術ブログへ🚀
+                </Text>
+                <Text>
+                    こちらでは、このウェブアプリ自体の作り方や技術的なトピックを段階ごとに初心者の方でも理解できるように、わかりやすく解説しています。
+                </Text>
+                <Text fontWeight="bold">仮の投稿やコメントと返信</Text>
+                <Text>
+                    仮の投稿を3つ用意しています。まずはその仮の投稿にコメントしたり、コメントに対して返信したりして、自由に触ってどのようなブログなのか見てみてください。
+                </Text>
+                <Text>ここで得られる知識やスキルを活かして、あなたのIT技術が成長することを願っています。一緒にプログラミングの世界を楽しみましょう!!!💻✨</Text>
+            </VStack>
+            <VStack justify="center">
+                <VStack spacing={4} align="start">
+                    <Box as="p" p={4} fontSize="3xl" fontWeight="bold">
+                        投稿一覧
+                    </Box>
+                </VStack>
+
+                <VStack align="center" justify="center">
                     {posts.map((post) => {
                         const postComments = comments.filter(
                             (comment) => comment.post_id === post.id
