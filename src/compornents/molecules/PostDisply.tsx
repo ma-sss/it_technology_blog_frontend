@@ -15,7 +15,7 @@ export const PostDisply: FC<Props> = memo((props) => {
     const navigate = useNavigate();
 
     return adminId.id !== null ? (
-        <Link p={4} onClick={() => navigate("/post_edit_page")}>
+        <Link p={12} onClick={() => navigate("/post_edit_page")}>
             <VStack textAlign="center" spacing={4}>
                 <Text fontSize="2xl" fontWeight="bold">
                     {postInfo.title}
@@ -24,7 +24,7 @@ export const PostDisply: FC<Props> = memo((props) => {
             </VStack>
         </Link>
     ) : (
-        <Box p={4}>
+        <Box p={12}>
             <VStack textAlign="center" spacing={4}>
                 <Text fontSize="2xl" fontWeight="bold">
                     {postInfo.title}

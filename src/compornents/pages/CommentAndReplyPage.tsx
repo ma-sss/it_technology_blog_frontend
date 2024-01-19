@@ -1,5 +1,5 @@
 import { FC, memo, useEffect, useState } from "react";
-import { Box, Link, Text } from "@chakra-ui/react";
+import { Box, Link, Text, VStack } from "@chakra-ui/react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 
 import { showCommentInfo } from "../../store/showCommentInfo";
@@ -45,42 +45,42 @@ export const CommentAndReplyPage: FC = memo(() => {
 
     return (
         <Box p={4}>
-            <Box p={5}>
-                <Text fontSize="xl" fontWeight="bold">
+            <VStack p={12} spacing={4}>
+                <Text fontSize="2xl" fontWeight="bold">
                     コメント
                 </Text>
-            </Box>
-            {adminId.id !== null ? (
-                // 管理者のためのリンク
-                <Link onClick={() => navigate("/comment_edit_page")}>
-                    {commentInfo.admin_id !== null ? (
-                        <>
-                            <p>管理者</p>
-                            <p>{`コメント: ${commentInfo.text}`}</p>
-                        </>
-                    ) : (
-                        <>
-                            <p>{`ユーザーネーム: ${commentInfo.user_name}`}</p>
-                            <p>{`コメント: ${commentInfo.text}`}</p>
-                        </>
-                    )}
-                </Link>
-            ) : (
-                // 一般ユーザーのための表示
-                <Box>
-                    {commentInfo.admin_id !== null ? (
-                        <Box>
-                            <Text>管理者</Text>
-                            <Text>{`コメント: ${commentInfo.text}`}</Text>
-                        </Box>
-                    ) : (
-                        <Box>
-                            <Text>{`ユーザーネーム: ${commentInfo.user_name}`}</Text>
-                            <Text>{`コメント: ${commentInfo.text}`}</Text>
-                        </Box>
-                    )}
-                </Box>
-            )}
+                {adminId.id !== null ? (
+                    // 管理者のためのリンク
+                    <Link onClick={() => navigate("/comment_edit_page")}>
+                        {commentInfo.admin_id !== null ? (
+                            <>
+                                <p>管理者</p>
+                                <p>{`コメント: ${commentInfo.text}`}</p>
+                            </>
+                        ) : (
+                            <>
+                                <p>{`ユーザーネーム: ${commentInfo.user_name}`}</p>
+                                <p>{`コメント: ${commentInfo.text}`}</p>
+                            </>
+                        )}
+                    </Link>
+                ) : (
+                    // 一般ユーザーのための表示
+                    <Box>
+                        {commentInfo.admin_id !== null ? (
+                            <Box>
+                                <Text>管理者</Text>
+                                <Text>{`コメント: ${commentInfo.text}`}</Text>
+                            </Box>
+                        ) : (
+                            <Box>
+                                <Text>{`ユーザーネーム: ${commentInfo.user_name}`}</Text>
+                                <Text>{`コメント: ${commentInfo.text}`}</Text>
+                            </Box>
+                        )}
+                    </Box>
+                )}
+            </VStack>
 
             <Text p={4} fontSize="xl" fontWeight="bold">
                 返信一覧
@@ -93,6 +93,13 @@ export const CommentAndReplyPage: FC = memo(() => {
                               <div>
                                   {reply.user_id ? ( // ユーザーreplyの場合
                                       <Link
+                                          m={1}
+                                          style={{
+                                              border: "3px solid orange",
+                                              padding: "8px",
+                                              borderRadius: "10px",
+                                              display: "inline-block",
+                                          }}
                                           onClick={() => {
                                               const repliedUser = users.find(
                                                   (user) =>
@@ -121,6 +128,13 @@ export const CommentAndReplyPage: FC = memo(() => {
                                       </Link>
                                   ) : reply.admin_id !== null ? ( // 管理者コメントの場合
                                       <Link
+                                          m={1}
+                                          style={{
+                                              border: "3px solid teal",
+                                              padding: "8px",
+                                              borderRadius: "4px",
+                                              display: "inline-block",
+                                          }}
                                           onClick={() => {
                                               navigate("/reply_edit_page");
                                               setReplyInfo({
@@ -132,7 +146,7 @@ export const CommentAndReplyPage: FC = memo(() => {
                                               });
                                           }}
                                       >
-                                          <p>管理者</p>
+                                          <Text fontWeight="bold">管理者</Text>
                                           <p>{`返信内容: ${reply.text}`}</p>
                                       </Link>
                                   ) : null}
@@ -141,7 +155,15 @@ export const CommentAndReplyPage: FC = memo(() => {
                         : reply.comment_id === commentInfo.id && (
                               <div>
                                   {reply.user_id ? ( // ユーザーreplyの場合
-                                      <Box>
+                                      <Box
+                                          m={1}
+                                          style={{
+                                              border: "3px solid orange",
+                                              padding: "8px",
+                                              borderRadius: "10px",
+                                              display: "inline-block",
+                                          }}
+                                      >
                                           <p>{`ユーザーネーム: ${
                                               users.find(
                                                   (user) =>
@@ -151,8 +173,16 @@ export const CommentAndReplyPage: FC = memo(() => {
                                           <p>{`返信内容: ${reply.text}`}</p>
                                       </Box>
                                   ) : reply.admin_id !== null ? ( // 管理者コメントの場合
-                                      <Box>
-                                          <p>管理者</p>
+                                      <Box
+                                          m={1}
+                                          style={{
+                                              border: "3px solid teal",
+                                              padding: "8px",
+                                              borderRadius: "4px",
+                                              display: "inline-block",
+                                          }}
+                                      >
+                                          <Text fontWeight="bold">管理者</Text>
                                           <p>{`返信内容: ${reply.text}`}</p>
                                       </Box>
                                   ) : null}
