@@ -8,13 +8,14 @@ type Props = {
     text: string;
     setText: Dispatch<SetStateAction<string>>;
     setComments: Dispatch<SetStateAction<comment[]>>;
+    setCommentError: Dispatch<SetStateAction<string[]>>;
     adminId: {id: number};
 };
 
 export const useHandleAdmincommentSubmit = () => {
 
     const handleAdminCommentSubmit = useCallback((props: Props) => {
-        const {postInfo, text, setText, setComments, adminId} = props;
+        const {postInfo, text, setText, setComments, setCommentError, adminId} = props;
 
         const accessToken = Cookies.get("access-token");
         const client = Cookies.get("client");
@@ -36,7 +37,8 @@ export const useHandleAdmincommentSubmit = () => {
                 }
             )
             .then((res) => {
-                console.log(res);
+                console.log(res.data.data);
+                setCommentError(res.data.data);
                 axios
                     .get(
                         `http://localhost:3000/api/v1/user/comments`

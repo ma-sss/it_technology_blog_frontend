@@ -3,20 +3,23 @@ import { PrimaryInput } from "../../atoms/PrimaryInput";
 import { PrimaryTextarea } from "../../atoms/PrimaryTextarea";
 import { Box, Button } from "@chakra-ui/react";
 import { PrimaryButton } from "../../atoms/button/PrimaryButton";
+import { ErrorDisplay } from "../../molecules/ErrorDisply";
 
 type Props = {
     name: string;
     setName: Dispatch<SetStateAction<string>>;
     text: string;
     setText: Dispatch<SetStateAction<string>>;
+    nameAndReplyError: Array<string>;
     onClick: () => void;
 }
 
 export const UserReplyInput: FC<Props> = memo((props) => {
-    const { name, setName, text, setText, onClick } = props;
+    const { name, setName, text, setText, nameAndReplyError, onClick } = props;
 
     return (
         <Box>
+            <ErrorDisplay errorsArray={nameAndReplyError} />
                     <PrimaryInput
                         placeholder="名前"
                         value={name}

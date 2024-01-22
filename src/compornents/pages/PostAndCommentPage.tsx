@@ -18,6 +18,8 @@ import { showCommentInfo } from "../../store/showCommentInfo";
 import { reply } from "../../types/reply";
 
 export const PostAndCommentPage: FC = memo(() => {
+    const [commentError, setCommentError] = useState<string[]>([]);
+    const [nameAndCommentError, setNameAndCommentError] = useState<string[]>([]);
     const [name, setName] = useState("");
     const [text, setText] = useState("");
 
@@ -167,12 +169,14 @@ export const PostAndCommentPage: FC = memo(() => {
                 <AdminCommentInput
                     text={text}
                     setText={setText}
+                    commentError={commentError}
                     onClick={() =>
                         handleAdminCommentSubmit({
                             postInfo,
                             text,
                             setText,
                             setComments,
+                            setCommentError,
                             adminId,
                         })
                     }
@@ -183,6 +187,7 @@ export const PostAndCommentPage: FC = memo(() => {
                     setName={setName}
                     text={text}
                     setText={setText}
+                    nameAndCommentError={nameAndCommentError}
                     onClick={() =>
                         handleUserCommentSubmit({
                             postInfo,
@@ -192,6 +197,7 @@ export const PostAndCommentPage: FC = memo(() => {
                             setUsers,
                             setName,
                             setText,
+                            setNameAndCommentError,
                         })
                     }
                 />

@@ -11,21 +11,37 @@ type Props = {
     commentInfo: { id: number; user_name: string; text: string };
     setReplies: Dispatch<SetStateAction<reply[]>>;
     setUsers: Dispatch<SetStateAction<user[]>>;
+    setNameAndReplyError: Dispatch<SetStateAction<string[]>>;
 };
 
 export const useHandleUserReplySubmit = () => {
     const handleUserReplySubmit = useCallback((props: Props) => {
-        const { name, setName, text, setText, commentInfo, setReplies, setUsers } = props;
+        const {
+            name,
+            setName,
+            text,
+            setText,
+            commentInfo,
+            setReplies,
+            setUsers,
+            setNameAndReplyError,
+        } = props;
 
         axios
             .post(
                 `http://localhost:3000/api/v1/user/comment/${commentInfo.id}/reply`,
                 {
-                    name: name,
-                    text: text,
+                    reply: {
+                        text: text,
+                    },
+                    user: {
+                        name: name,
+                    },
                 }
             )
             .then((res) => {
+                console.log(res.data.error);
+                setNameAndReplyError(res.data.error);
                 axios
                     .get(`http://localhost:3000/api/v1/user/replies`)
                     .then((res) => {

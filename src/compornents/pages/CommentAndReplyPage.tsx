@@ -21,6 +21,9 @@ export const CommentAndReplyPage: FC = memo(() => {
     const [users, setUsers] = useState<Array<user>>([]);
     const [replies, setReplies] = useState<Array<reply>>([]);
 
+    const [replyError, setReplyError] = useState<Array<string>>([]);
+    const [nameAndReplyError, setNameAndReplyError] = useState<Array<string>>([]);
+
     const navigate = useNavigate();
 
     const adminId = useRecoilValue(adminInfo);
@@ -199,6 +202,7 @@ export const CommentAndReplyPage: FC = memo(() => {
                 <AdminReplyInput
                     text={text}
                     setText={setText}
+                    replyError={replyError}
                     onClick={() =>
                         handleAdminReplySubmit({
                             text,
@@ -206,6 +210,7 @@ export const CommentAndReplyPage: FC = memo(() => {
                             commentInfo,
                             setReplies,
                             setUsers,
+                            setReplyError
                         })
                     }
                 />
@@ -215,6 +220,7 @@ export const CommentAndReplyPage: FC = memo(() => {
                     setName={setName}
                     text={text}
                     setText={setText}
+                    nameAndReplyError={nameAndReplyError}
                     onClick={() =>
                         handleUserReplySubmit({
                             name,
@@ -224,6 +230,7 @@ export const CommentAndReplyPage: FC = memo(() => {
                             commentInfo,
                             setReplies,
                             setUsers,
+                            setNameAndReplyError
                         })
                     }
                 />

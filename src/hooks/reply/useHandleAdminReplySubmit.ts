@@ -13,6 +13,7 @@ type Props = {
     commentInfo: { id: number; user_name: string; text: string };
     setReplies: Dispatch<SetStateAction<reply[]>>;
     setUsers: Dispatch<SetStateAction<user[]>>;
+    setReplyError: Dispatch<SetStateAction<string[]>>;
 };
 
 export const useHandleAdminReplySubmit = () => {
@@ -20,7 +21,7 @@ export const useHandleAdminReplySubmit = () => {
 
     const handleAdminReplySubmit = useCallback(
         (props: Props) => {
-            const { text, setText, commentInfo, setReplies, setUsers } = props;
+            const { text, setText, commentInfo, setReplies, setUsers, setReplyError } = props;
 
             const accessToken = Cookies.get("access-token");
             const client = Cookies.get("client");
@@ -41,7 +42,8 @@ export const useHandleAdminReplySubmit = () => {
                     }
                 )
                 .then((res) => {
-                    console.log(res);
+                    console.log(res.data.errors);
+                    setReplyError(res.data.errors);
                     axios
                         .get(`http://localhost:3000/api/v1/user/replies`)
                         .then((res) => {

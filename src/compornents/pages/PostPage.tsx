@@ -1,4 +1,12 @@
-import { Box, Button, Input, Textarea } from "@chakra-ui/react";
+import {
+    Alert,
+    AlertIcon,
+    Box,
+    Button,
+    Input,
+    Text,
+    Textarea,
+} from "@chakra-ui/react";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { ChangeEvent, FC, memo, useCallback, useState } from "react";
@@ -6,8 +14,10 @@ import { useRecoilValue } from "recoil";
 
 import { adminInfo } from "../../store/adminInfo";
 import { useNavigate } from "react-router-dom";
+import { ErrorDisplay } from "../molecules/ErrorDisply";
 
 export const PostPage: FC = memo(() => {
+    const [titleAndContentError, setTitleAndContentError] = useState([]);
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
 
@@ -20,29 +30,35 @@ export const PostPage: FC = memo(() => {
     const uid = Cookies.get("uid");
 
     const handlePostSubmit = useCallback(() => {
-        axios.post(
-            `http://localhost:3000/api/v1/admin/${adminId.id}/post`,
-            {
-                admin_id: adminId,
-                title: title,
-                content: content,
-            },
-            {
-                headers: {
-                    "access-token": accessToken!,
-                    "client": client!,
-                    "uid": uid!,
+        axios
+            .post(
+                `http://localhost:3000/api/v1/admin/${adminId.id}/post`,
+                {
+                    title: title,
+                    content: content,
                 },
-            }
-        ).then((res) => {
-            console.log(res);
-            navigate("/");
-        }).catch((error) => console.log(error));
-    },[accessToken, adminId, client, content, navigate, title, uid]);
+                {
+                    headers: {
+                        "access-token": accessToken!,
+                        client: client!,
+                        uid: uid!,
+                    },
+                }
+            )
+            .then((res) => {
+                console.log(res.data);
+                setTitleAndContentError(res.data.error);
+                if (res.data.status === "SUCCESS") {
+                    navigate("/");
+                }
+            })
+            .catch((error) => console.log(error.data));
+    }, [accessToken, adminId, client, content, navigate, title, uid]);
 
     return (
         <Box p={4}>
             <p>投稿ページ</p>
+            <ErrorDisplay errorsArray={titleAndContentError} />
             <Input
                 placeholder="タイトル"
                 mb={4}
@@ -52,7 +68,7 @@ export const PostPage: FC = memo(() => {
                 }
             />
             <Textarea
-                placeholder="コンテンツ"
+                placeholder="内容"
                 mb={4}
                 value={content}
                 onChange={(e: ChangeEvent<HTMLTextAreaElement>) =>
