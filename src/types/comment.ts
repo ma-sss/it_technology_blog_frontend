@@ -5,6 +5,6 @@ export type comment = {
     user_id: number;
     user_name: string;
     text: string;
-    created_at: Date;
-    updated_at: Date;
+    created_at: string;
+    updated_at: string;
 };

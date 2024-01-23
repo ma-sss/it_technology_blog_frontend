@@ -75,7 +75,7 @@ export const PostAndCommentPage: FC = memo(() => {
                                         style={{
                                             border: "3px solid orange",
                                             padding: "8px",
-                                            borderRadius: "10px",
+                                            borderRadius: "4px",
                                             display: "inline-block",
                                         }}
                                         onClick={() => {

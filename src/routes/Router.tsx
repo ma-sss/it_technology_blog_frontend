@@ -9,6 +9,7 @@ import { HeaderLayout } from "../compornents/templates/HeaderLayout";
 import { CommentAndReplyPage } from "../compornents/pages/CommentAndReplyPage";
 import { ReplyEditPage } from "../compornents/pages/ReplyEditPage";
 import { PostEditPage } from "../compornents/pages/PostEditPage";
+import { PostListPage } from "../compornents/pages/PostListPage";
 
 export const Router = () => {
     return (
@@ -17,6 +18,7 @@ export const Router = () => {
                 <Route path="/" element={<Top />} />
                 <Route path="/sign_in" element={<SignIn />} />
                 <Route path="/post_page" element={<PostPage />} />
+                <Route path="/post_list_page" element={<PostListPage />} />
                 <Route path="/post_edit_page" element={<PostEditPage />} />
                 <Route
                     path="/post_and_comment_page"

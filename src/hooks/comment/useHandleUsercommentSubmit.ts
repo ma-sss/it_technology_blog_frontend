@@ -38,7 +38,6 @@ export const useHandleUserCommentSubmit = () => {
                 },
             })
             .then((res) => {
-                console.log(res.data.error);
                 setNameAndCommentError(res.data.error);
                 axios
                     .get(`http://localhost:3000/api/v1/user/comments`)

@@ -42,7 +42,6 @@ export const useHandleAdminReplySubmit = () => {
                     }
                 )
                 .then((res) => {
-                    console.log(res.data.errors);
                     setReplyError(res.data.errors);
                     axios
                         .get(`http://localhost:3000/api/v1/user/replies`)

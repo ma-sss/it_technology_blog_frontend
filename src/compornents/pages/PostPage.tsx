@@ -1,13 +1,8 @@
-import {
-    Box,
-    Button,
-    Input,
-    Textarea,
-} from "@chakra-ui/react";
+import { ChangeEvent, FC, memo, useCallback, useState } from "react";
+import { Box, Button, Input, Select, Textarea } from "@chakra-ui/react";
+import { useRecoilValue } from "recoil";
 import axios from "axios";
 import Cookies from "js-cookie";
-import { ChangeEvent, FC, memo, useCallback, useState } from "react";
-import { useRecoilValue } from "recoil";
 
 import { adminInfo } from "../../store/adminInfo";
 import { useNavigate } from "react-router-dom";
@@ -17,6 +12,7 @@ export const PostPage: FC = memo(() => {
     const [titleAndContentError, setTitleAndContentError] = useState([]);
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
+    const [category, setCategory] = useState("");
 
     const navigate = useNavigate();
 
@@ -33,6 +29,7 @@ export const PostPage: FC = memo(() => {
                 {
                     title: title,
                     content: content,
+                    category: category,
                 },
                 {
                     headers: {
@@ -50,7 +47,7 @@ export const PostPage: FC = memo(() => {
                 }
             })
             .catch((error) => console.log(error.data));
-    }, [accessToken, adminId, client, content, navigate, title, uid]);
+    }, [accessToken, adminId, client, content, navigate, title, uid, category]);
 
     return (
         <Box p={4}>
@@ -64,6 +61,16 @@ export const PostPage: FC = memo(() => {
                     setTitle(e.target.value)
                 }
             />
+            <Select
+                placeholder="Select a category"
+                mb={4}
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+            >
+                <option value="frontend">frontend</option>
+                <option value="backend">backend</option>
+                <option value="other">other</option>
+            </Select>
             <Textarea
                 placeholder="内容"
                 mb={4}

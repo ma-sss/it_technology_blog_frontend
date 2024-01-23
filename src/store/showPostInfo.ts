@@ -5,6 +5,6 @@ const { persistAtom } = recoilPersist();
 
 export const showPostInfo = atom({
     key: "showPostInfo",
-    default: { id: null, title: "", content: "" },
+    default: { id: null, category: "", title: "", content: "" },
     effects_UNSTABLE: [persistAtom],
 });

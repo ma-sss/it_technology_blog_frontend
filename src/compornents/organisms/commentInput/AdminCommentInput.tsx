@@ -36,7 +36,7 @@ export const AdminCommentInput: FC<Props> = memo((props) => {
             >
                 投稿する
             </Button>
-            <PrimaryButton onClick={() => navigate("/")}>
+            <PrimaryButton onClick={() => navigate("/post_list_page")}>
                 戻る
             </PrimaryButton>
         </Box>

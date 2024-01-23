@@ -10,7 +10,7 @@ export const ErrorDisplay: FC<Props> = memo((props) => {
 
     return (
         <>
-            {errorsArray.length > 0 && (
+            {errorsArray && errorsArray.length > 0 && (
                 <Alert status="error" mb={4} borderRadius="md">
                     <AlertIcon />
                     {errorsArray.map((error, index) => (

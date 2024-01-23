@@ -57,13 +57,13 @@ export const CommentAndReplyPage: FC = memo(() => {
                     <Link onClick={() => navigate("/comment_edit_page")}>
                         {commentInfo.admin_id !== null ? (
                             <>
-                                <p>管理者</p>
-                                <p>{`コメント: ${commentInfo.text}`}</p>
+                                <Text fontWeight="bold">管理者</Text>
+                                <Text>{`コメント: ${commentInfo.text}`}</Text>
                             </>
                         ) : (
                             <>
-                                <p>{`ユーザーネーム: ${commentInfo.user_name}`}</p>
-                                <p>{`コメント: ${commentInfo.text}`}</p>
+                                <Text fontWeight="bold">{`ユーザーネーム: ${commentInfo.user_name}`}</Text>
+                                <Text>{`コメント: ${commentInfo.text}`}</Text>
                             </>
                         )}
                     </Link>
@@ -72,12 +72,12 @@ export const CommentAndReplyPage: FC = memo(() => {
                     <Box>
                         {commentInfo.admin_id !== null ? (
                             <Box>
-                                <Text>管理者</Text>
+                                <Text fontWeight="bold">管理者</Text>
                                 <Text>{`コメント: ${commentInfo.text}`}</Text>
                             </Box>
                         ) : (
                             <Box>
-                                <Text>{`ユーザーネーム: ${commentInfo.user_name}`}</Text>
+                                <Text fontWeight="bold">{`ユーザーネーム: ${commentInfo.user_name}`}</Text>
                                 <Text>{`コメント: ${commentInfo.text}`}</Text>
                             </Box>
                         )}
@@ -100,7 +100,7 @@ export const CommentAndReplyPage: FC = memo(() => {
                                           style={{
                                               border: "3px solid orange",
                                               padding: "8px",
-                                              borderRadius: "10px",
+                                              borderRadius: "4px",
                                               display: "inline-block",
                                           }}
                                           onClick={() => {
@@ -121,13 +121,13 @@ export const CommentAndReplyPage: FC = memo(() => {
                                               }
                                           }}
                                       >
-                                          <p>{`ユーザーネーム: ${
+                                          <Text fontWeight="bold">{`ユーザーネーム: ${
                                               users.find(
                                                   (user) =>
                                                       user.id === reply.user_id
                                               )?.name
-                                          }`}</p>
-                                          <p>{`返信内容: ${reply.text}`}</p>
+                                          }`}</Text>
+                                          <Text>{`返信内容: ${reply.text}`}</Text>
                                       </Link>
                                   ) : reply.admin_id !== null ? ( // 管理者コメントの場合
                                       <Link
@@ -150,7 +150,7 @@ export const CommentAndReplyPage: FC = memo(() => {
                                           }}
                                       >
                                           <Text fontWeight="bold">管理者</Text>
-                                          <p>{`返信内容: ${reply.text}`}</p>
+                                          <Text>{`返信内容: ${reply.text}`}</Text>
                                       </Link>
                                   ) : null}
                               </div>
@@ -163,17 +163,17 @@ export const CommentAndReplyPage: FC = memo(() => {
                                           style={{
                                               border: "3px solid orange",
                                               padding: "8px",
-                                              borderRadius: "10px",
+                                              borderRadius: "4px",
                                               display: "inline-block",
                                           }}
                                       >
-                                          <p>{`ユーザーネーム: ${
+                                          <Text fontWeight="bold">{`ユーザーネーム: ${
                                               users.find(
                                                   (user) =>
                                                       user.id === reply.user_id
                                               )?.name
-                                          }`}</p>
-                                          <p>{`返信内容: ${reply.text}`}</p>
+                                          }`}</Text>
+                                          <Text>{`返信内容: ${reply.text}`}</Text>
                                       </Box>
                                   ) : reply.admin_id !== null ? ( // 管理者コメントの場合
                                       <Box
@@ -186,7 +186,7 @@ export const CommentAndReplyPage: FC = memo(() => {
                                           }}
                                       >
                                           <Text fontWeight="bold">管理者</Text>
-                                          <p>{`返信内容: ${reply.text}`}</p>
+                                          <Text>{`返信内容: ${reply.text}`}</Text>
                                       </Box>
                                   ) : null}
                               </div>
