@@ -4,9 +4,12 @@ import Cookies from "js-cookie";
 import { useRecoilState } from "recoil";
 import { showCommentInfo } from "../../store/showCommentInfo";
 import { commentInfoType } from "../../types/commentInfoType";
+import { useMessage } from "../useMessage";
 
 export const useHandleCommentEdit = () => {
     const [commentInfo, setCommentInfo] = useRecoilState(showCommentInfo);
+
+    const { showMessage } = useMessage();
 
     const HandleCommentEdit = useCallback(() => {
         const accessToken = Cookies.get("access-token");
@@ -32,6 +35,10 @@ export const useHandleCommentEdit = () => {
                 }
             )
             .then(() => {
+                showMessage({
+                    title: "コメントを編集しました",
+                    status: "success",
+                });
                 const fetchEndpoint = commentInfo.user_id
                     ? `http://localhost:3000/api/v1/user/comments/${commentInfo.id}`
                     : `http://localhost:3000/api/v1/admin/comments/${commentInfo.id}`;
@@ -49,7 +56,7 @@ export const useHandleCommentEdit = () => {
                     .catch((res) => console.log(res));
             })
             .catch((error) => console.log(error));
-    }, [commentInfo.id, commentInfo.text, commentInfo.user_id, setCommentInfo]);
+    }, [commentInfo.id, commentInfo.text, commentInfo.user_id, setCommentInfo, showMessage]);
 
     return { HandleCommentEdit };
 };

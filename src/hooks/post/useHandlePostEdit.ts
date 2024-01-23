@@ -4,9 +4,12 @@ import Cookies from "js-cookie";
 import { useRecoilState } from "recoil";
 import { showPostInfo } from "../../store/showPostInfo";
 import { postInfoType } from "../../types/postInfoType";
+import { useMessage } from "../useMessage";
 
 export const useHandlePostEdit = () => {
     const [postInfo, setPostInfo] = useRecoilState(showPostInfo);
+
+    const { showMessage } = useMessage();
 
     const HandlePostEdit = useCallback(() => {
         const accessToken = Cookies.get("access-token");
@@ -38,13 +41,23 @@ export const useHandlePostEdit = () => {
                             ...prevPostInfo,
                             text: res.data.data.text,
                         }));
+                        showMessage({
+                            title: "投稿を編集しました",
+                            status: "success",
+                        });
                         console.log(res.data.data.text);
                         window.history.back();
                     })
                     .catch((res) => console.log(res));
             })
             .catch((error) => console.log(error));
-    }, [postInfo.id, setPostInfo, postInfo.content, postInfo.title]);
+    }, [
+        postInfo.id,
+        setPostInfo,
+        postInfo.content,
+        postInfo.title,
+        showMessage,
+    ]);
 
     return { HandlePostEdit };
 };

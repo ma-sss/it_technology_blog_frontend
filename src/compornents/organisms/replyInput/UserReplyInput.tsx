@@ -1,7 +1,9 @@
 import { ChangeEvent, Dispatch, FC, SetStateAction, memo } from "react";
+import { useNavigate } from "react-router-dom";
+import { Box, Button } from "@chakra-ui/react";
+
 import { PrimaryInput } from "../../atoms/PrimaryInput";
 import { PrimaryTextarea } from "../../atoms/PrimaryTextarea";
-import { Box, Button } from "@chakra-ui/react";
 import { PrimaryButton } from "../../atoms/button/PrimaryButton";
 import { ErrorDisplay } from "../../molecules/ErrorDisply";
 
@@ -16,6 +18,8 @@ type Props = {
 
 export const UserReplyInput: FC<Props> = memo((props) => {
     const { name, setName, text, setText, nameAndReplyError, onClick } = props;
+
+    const navigate = useNavigate();
 
     return (
         <Box>
@@ -42,7 +46,7 @@ export const UserReplyInput: FC<Props> = memo((props) => {
                     >
                         返信内容を投稿する
                     </Button>
-                    <PrimaryButton onClick={() => window.history.back()}>
+                    <PrimaryButton onClick={() => navigate("post_and_comment_page")}>
                         戻る
                     </PrimaryButton>
                 </Box>

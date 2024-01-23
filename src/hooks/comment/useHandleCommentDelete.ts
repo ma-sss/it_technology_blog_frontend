@@ -4,11 +4,14 @@ import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
 import { showCommentInfo } from "../../store/showCommentInfo";
 import { useRecoilValue } from "recoil";
+import { useMessage } from "../useMessage";
 
 export const useHandleCommentDelete = () => {
     const navigate = useNavigate();
 
     const commentInfo = useRecoilValue(showCommentInfo);
+
+    const { showMessage } = useMessage();
 
     const HandleCommentDelete = useCallback(() => {
         const accessToken = Cookies.get("access-token");
@@ -27,9 +30,12 @@ export const useHandleCommentDelete = () => {
                     uid: uid!,
                 },
             })
-            .then(() => navigate("/post_and_comment_page"))
+            .then(() => {
+                showMessage({ title: "コメントを一件削除しました", status: "warning" });
+                navigate("/post_and_comment_page")
+            })
             .catch((error) => console.log(error));
-    }, [navigate, commentInfo]);
+    }, [navigate, commentInfo, showMessage]);
 
     return { HandleCommentDelete };
 };

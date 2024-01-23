@@ -1,7 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import { Top } from "../compornents/pages/Top";
 import { SignIn } from "../compornents/pages/SignIn";
-import { SignUp } from "../compornents/pages/Signup";
 import { PostAndCommentPage } from "../compornents/pages/PostAndCommentPage";
 import { PostPage } from "../compornents/pages/PostPage";
 import { CommentEditPage } from "../compornents/pages/CommentEditPage";
@@ -17,7 +16,6 @@ export const Router = () => {
             <Routes>
                 <Route path="/" element={<Top />} />
                 <Route path="/sign_in" element={<SignIn />} />
-                <Route path="/sign_up" element={<SignUp />} />
                 <Route path="/post_page" element={<PostPage />} />
                 <Route path="/post_edit_page" element={<PostEditPage />} />
                 <Route

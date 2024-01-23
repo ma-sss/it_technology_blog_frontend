@@ -1,20 +1,21 @@
-import { useNavigate } from "react-router-dom";
 import { useSetRecoilState } from "recoil";
 import Cookies from "js-cookie";
 
 import { adminInfo } from "../../store/adminInfo";
 import axios from "axios";
+import { useMessage } from "../useMessage";
+import { useCallback } from "react";
 
 export const useSignOut = () => {
     const setAdminId = useSetRecoilState(adminInfo);
 
-    const navigate = useNavigate();
+    const { showMessage } = useMessage();
 
     const accessToken = Cookies.get("access-token");
     const client = Cookies.get("client");
     const uid = Cookies.get("uid");
 
-    const signOut = () => {
+    const signOut = useCallback(() => {
         setAdminId({ id: null });
 
         axios
@@ -31,10 +32,10 @@ export const useSignOut = () => {
                 Cookies.remove("uid");
                 Cookies.remove("client");
                 Cookies.remove("access-token");
-                navigate("/");
+                showMessage({ title: "ログアウトしました", status: "warning" });
             })
             .catch((error) => console.log(error));
-    };
+    },[accessToken, client, setAdminId, uid, showMessage])
 
     return { signOut };
 };

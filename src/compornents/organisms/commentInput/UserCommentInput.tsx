@@ -1,5 +1,7 @@
-import { Box, Button } from "@chakra-ui/react";
 import { ChangeEvent, Dispatch, FC, SetStateAction, memo } from "react";
+import { useNavigate } from "react-router-dom";
+import { Box, Button } from "@chakra-ui/react";
+
 import { PrimaryTextarea } from "../../atoms/PrimaryTextarea";
 import { PrimaryButton } from "../../atoms/button/PrimaryButton";
 import { PrimaryInput } from "../../atoms/PrimaryInput";
@@ -16,6 +18,9 @@ type Props = {
 
 export const UserCommentInput: FC<Props> = memo((props) => {
     const { name, setName, text, setText, nameAndCommentError, onClick } = props;
+
+    const navigate = useNavigate();
+
     return (
         <Box p={4}>
             <p>ユーザーコメント入力欄</p>
@@ -42,7 +47,7 @@ export const UserCommentInput: FC<Props> = memo((props) => {
             >
                 投稿する
             </Button>
-            <PrimaryButton onClick={() => window.history.back()}>
+            <PrimaryButton onClick={() => navigate("/")}>
                 戻る
             </PrimaryButton>
         </Box>

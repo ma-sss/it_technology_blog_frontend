@@ -1,10 +1,7 @@
 import {
-    Alert,
-    AlertIcon,
     Box,
     Button,
     Input,
-    Text,
     Textarea,
 } from "@chakra-ui/react";
 import axios from "axios";

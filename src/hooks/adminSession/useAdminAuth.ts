@@ -5,11 +5,14 @@ import Cookies from "js-cookie";
 import axios from "axios";
 
 import { adminInfo } from "../../store/adminInfo";
+import { useMessage } from "../useMessage";
 
 export const useAdminAuth = () => {
     const navigate = useNavigate();
 
     const setAdminId = useSetRecoilState(adminInfo);
+
+    const { showMessage } = useMessage();
 
     const login = useCallback(
         (email: string, password: string) => {
@@ -34,12 +37,12 @@ export const useAdminAuth = () => {
                     Cookies.set("uid", uid);
 
                     setAdminId({id: res.data.data.id});
-                    
+                    showMessage({ title: "ログインしました", status: "success"})
                     navigate("/");
                 })
                 .catch((error) => console.log(error));
         },
-        [navigate, setAdminId]
+        [navigate, setAdminId, showMessage]
     );
     return { login };
 };
