@@ -1,6 +1,6 @@
 import { FC, memo, useEffect, useState } from "react";
 import { Box, Link, Text, VStack } from "@chakra-ui/react";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilValue } from "recoil";
 
 import { showCommentInfo } from "../../store/showCommentInfo";
 import { adminInfo } from "../../store/adminInfo";
@@ -12,7 +12,8 @@ import { useHandleAdminReplySubmit } from "../../hooks/reply/useHandleAdminReply
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { user } from "../../types/user";
-import { showReplyInfo } from "../../store/showReplyInfo";
+import { ReplyDisplyForAdmin } from "../molecules/ReplyDisplyForAdmin";
+import { ReplyDisplyForUser } from "../molecules/ReplyDisplyForUser";
 
 export const CommentAndReplyPage: FC = memo(() => {
     const [name, setName] = useState("");
@@ -22,13 +23,14 @@ export const CommentAndReplyPage: FC = memo(() => {
     const [replies, setReplies] = useState<Array<reply>>([]);
 
     const [replyError, setReplyError] = useState<Array<string>>([]);
-    const [nameAndReplyError, setNameAndReplyError] = useState<Array<string>>([]);
+    const [nameAndReplyError, setNameAndReplyError] = useState<Array<string>>(
+        []
+    );
 
     const navigate = useNavigate();
 
     const adminId = useRecoilValue(adminInfo);
     const commentInfo = useRecoilValue(showCommentInfo);
-    const setReplyInfo = useSetRecoilState(showReplyInfo);
 
     const { handleAdminReplySubmit } = useHandleAdminReplySubmit();
 
@@ -56,15 +58,15 @@ export const CommentAndReplyPage: FC = memo(() => {
                     // 管理者のためのリンク
                     <Link onClick={() => navigate("/comment_edit_page")}>
                         {commentInfo.admin_id !== null ? (
-                            <>
+                            <Box>
                                 <Text fontWeight="bold">管理者</Text>
                                 <Text>{`コメント: ${commentInfo.text}`}</Text>
-                            </>
+                            </Box>
                         ) : (
-                            <>
+                            <Box>
                                 <Text fontWeight="bold">{`ユーザーネーム: ${commentInfo.user_name}`}</Text>
                                 <Text>{`コメント: ${commentInfo.text}`}</Text>
-                            </>
+                            </Box>
                         )}
                     </Link>
                 ) : (
@@ -90,36 +92,15 @@ export const CommentAndReplyPage: FC = memo(() => {
             </Text>
 
             {replies.map((reply) => (
-                <div key={reply.id}>
-                    {adminId.id !== null
+                <Box key={reply.id}>
+                    {adminId.id !== null //　管理者の場合（ログイン中）返信表示がLinkになっています
                         ? reply.comment_id === commentInfo.id && (
-                              <div>
+                              <Box>
                                   {reply.user_id ? ( // ユーザーreplyの場合
-                                      <Link
-                                          m={1}
-                                          style={{
-                                              border: "3px solid orange",
-                                              padding: "8px",
-                                              borderRadius: "4px",
-                                              display: "inline-block",
-                                          }}
-                                          onClick={() => {
-                                              const repliedUser = users.find(
-                                                  (user) =>
-                                                      user.id === reply.user_id
-                                              );
-                                              if (repliedUser) {
-                                                  navigate("/reply_edit_page");
-                                                  setReplyInfo({
-                                                      id: reply.id,
-                                                      user_id: reply.user_id,
-                                                      admin_id: null,
-                                                      user_name:
-                                                          repliedUser.name,
-                                                      text: reply.text,
-                                                  });
-                                              }
-                                          }}
+                                      <ReplyDisplyForAdmin
+                                          color="orange"
+                                          users={users}
+                                          reply={reply}
                                       >
                                           <Text fontWeight="bold">{`ユーザーネーム: ${
                                               users.find(
@@ -127,45 +108,26 @@ export const CommentAndReplyPage: FC = memo(() => {
                                                       user.id === reply.user_id
                                               )?.name
                                           }`}</Text>
-                                          <Text>{`返信内容: ${reply.text}`}</Text>
-                                      </Link>
+                                      </ReplyDisplyForAdmin>
                                   ) : reply.admin_id !== null ? ( // 管理者コメントの場合
-                                      <Link
-                                          m={1}
-                                          style={{
-                                              border: "3px solid teal",
-                                              padding: "8px",
-                                              borderRadius: "4px",
-                                              display: "inline-block",
-                                          }}
-                                          onClick={() => {
-                                              navigate("/reply_edit_page");
-                                              setReplyInfo({
-                                                  id: reply.id,
-                                                  user_id: null,
-                                                  admin_id: reply.admin_id,
-                                                  user_name: "",
-                                                  text: reply.text,
-                                              });
-                                          }}
+                                      <ReplyDisplyForAdmin
+                                          color="teal"
+                                          users={users}
+                                          reply={reply}
                                       >
                                           <Text fontWeight="bold">管理者</Text>
-                                          <Text>{`返信内容: ${reply.text}`}</Text>
-                                      </Link>
+                                      </ReplyDisplyForAdmin>
                                   ) : null}
-                              </div>
+                              </Box>
                           )
-                        : reply.comment_id === commentInfo.id && (
-                              <div>
+                        : // ここからはadminId.id === nullで一般ユーザーの場合（ログアウト中）返信表示に対してのLinkをBoxに変更
+                          reply.comment_id === commentInfo.id && (
+                              <Box>
                                   {reply.user_id ? ( // ユーザーreplyの場合
-                                      <Box
-                                          m={1}
-                                          style={{
-                                              border: "3px solid orange",
-                                              padding: "8px",
-                                              borderRadius: "4px",
-                                              display: "inline-block",
-                                          }}
+                                      <ReplyDisplyForUser
+                                          color="orange"
+                                          users={users}
+                                          reply={reply}
                                       >
                                           <Text fontWeight="bold">{`ユーザーネーム: ${
                                               users.find(
@@ -173,25 +135,19 @@ export const CommentAndReplyPage: FC = memo(() => {
                                                       user.id === reply.user_id
                                               )?.name
                                           }`}</Text>
-                                          <Text>{`返信内容: ${reply.text}`}</Text>
-                                      </Box>
+                                      </ReplyDisplyForUser>
                                   ) : reply.admin_id !== null ? ( // 管理者コメントの場合
-                                      <Box
-                                          m={1}
-                                          style={{
-                                              border: "3px solid teal",
-                                              padding: "8px",
-                                              borderRadius: "4px",
-                                              display: "inline-block",
-                                          }}
+                                      <ReplyDisplyForUser
+                                          color="teal"
+                                          users={users}
+                                          reply={reply}
                                       >
                                           <Text fontWeight="bold">管理者</Text>
-                                          <Text>{`返信内容: ${reply.text}`}</Text>
-                                      </Box>
+                                      </ReplyDisplyForUser>
                                   ) : null}
-                              </div>
+                              </Box>
                           )}
-                </div>
+                </Box>
             ))}
 
             <Text p={5} fontSize="xl" fontWeight="bold">
@@ -210,7 +166,7 @@ export const CommentAndReplyPage: FC = memo(() => {
                             commentInfo,
                             setReplies,
                             setUsers,
-                            setReplyError
+                            setReplyError,
                         })
                     }
                 />
@@ -230,7 +186,7 @@ export const CommentAndReplyPage: FC = memo(() => {
                             commentInfo,
                             setReplies,
                             setUsers,
-                            setNameAndReplyError
+                            setNameAndReplyError,
                         })
                     }
                 />

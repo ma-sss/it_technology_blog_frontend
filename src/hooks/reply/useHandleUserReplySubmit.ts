@@ -64,7 +64,7 @@ export const useHandleUserReplySubmit = () => {
                 setText("");
             })
             .catch((error) => console.log(error));
-    }, []);
+    }, [showMessage]);
 
     return { handleUserReplySubmit };
 };

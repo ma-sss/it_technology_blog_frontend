@@ -59,7 +59,7 @@ export const useHandleAdmincommentSubmit = () => {
                 setText("");
             })
             .catch((error) => console.log(error));
-    }, []);
+    }, [showMessage]);
 
     return { handleAdminCommentSubmit };
 };

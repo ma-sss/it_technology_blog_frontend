@@ -58,7 +58,7 @@ export const useHandleUserCommentSubmit = () => {
                 setText("");
             })
             .catch((error) => console.log(error));
-    }, []);
+    }, [showMessage]);
 
     return { handleUserCommentSubmit };
 };

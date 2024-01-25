@@ -10,13 +10,13 @@ import {
     Wrap,
     WrapItem,
 } from "@chakra-ui/react";
-import { ChatIcon } from "@chakra-ui/icons";
 import { useNavigate } from "react-router-dom";
 
 import { showPostInfo } from "../../store/showPostInfo";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { comment } from "../../types/comment";
 import { PrimaryButton } from "../atoms/button/PrimaryButton";
+import { NumberAndSpeechBubbble } from "../molecules/NumberAndSpeechBubble";
 
 export const PostListPage: FC = memo(() => {
     const [posts, setPosts] = useState<Array<post>>([]);
@@ -78,25 +78,20 @@ export const PostListPage: FC = memo(() => {
                                             navigate("/post_and_comment_page");
                                         }}
                                     >
-                                        <Text color="black" fontWeight="bold" isTruncated>
+                                        <Text
+                                            color="black"
+                                            fontWeight="bold"
+                                            isTruncated
+                                        >
                                             {post.title}
                                         </Text>
                                         <Flex
                                             justifyContent="space-between"
                                             mt={2}
                                         >
-                                            <Text
-                                                mr={3}
-                                                color="orange.500"
-                                                fontWeight="bold"
-                                            >
-                                                <ChatIcon
-                                                    boxSize={6}
-                                                    ml={1}
-                                                    mr={1}
-                                                />
-                                                {postComments}{" "}
-                                            </Text>
+                                            <NumberAndSpeechBubbble color="orange">
+                                                {postComments}
+                                            </NumberAndSpeechBubbble>
                                             {post.updated_at && (
                                                 <Text>
                                                     {`更新日: ${

@@ -1,8 +1,6 @@
 import { FC, memo, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Flex, Link, Text, VStack } from "@chakra-ui/react";
-import { ChatIcon } from "@chakra-ui/icons";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { Text, VStack } from "@chakra-ui/react";
+import { useRecoilValue } from "recoil";
 import axios from "axios";
 
 import { showPostInfo } from "../../store/showPostInfo";
@@ -14,22 +12,21 @@ import { useHandleUserCommentSubmit } from "../../hooks/comment/useHandleUsercom
 import { useHandleAdmincommentSubmit } from "../../hooks/comment/useHandleAdminCommentSubmit";
 import { PostDisply } from "../molecules/PostDisply";
 import { user } from "../../types/user";
-import { showCommentInfo } from "../../store/showCommentInfo";
 import { reply } from "../../types/reply";
+import { CommentDisply } from "../molecules/CommentDisply";
 
 export const PostAndCommentPage: FC = memo(() => {
     const [commentError, setCommentError] = useState<string[]>([]);
-    const [nameAndCommentError, setNameAndCommentError] = useState<string[]>([]);
+    const [nameAndCommentError, setNameAndCommentError] = useState<string[]>(
+        []
+    );
     const [name, setName] = useState("");
     const [text, setText] = useState("");
-
-    const navigate = useNavigate();
 
     const [comments, setComments] = useState<Array<comment>>([]);
     const [replies, setReplies] = useState<Array<reply>>([]);
     const [users, setUsers] = useState<Array<user>>([]);
 
-    const setCommentInfo = useSetRecoilState(showCommentInfo);
     const postInfo = useRecoilValue(showPostInfo);
     const adminId = useRecoilValue(adminInfo);
 
@@ -61,43 +58,16 @@ export const PostAndCommentPage: FC = memo(() => {
                 </Text>
             </VStack>
             {comments.map((comment) => {
-                const commentReplies = replies.filter(
-                    (reply) => reply.comment_id === comment.id
-                ).length;
-
                 return (
                     <div key={comment.id}>
                         {comment.post_id === postInfo.id && (
                             <div>
                                 {comment.user_id ? ( // ユーザーコメントの場合
-                                    <Link
-                                        m={1}
-                                        style={{
-                                            border: "3px solid orange",
-                                            padding: "8px",
-                                            borderRadius: "4px",
-                                            display: "inline-block",
-                                        }}
-                                        onClick={() => {
-                                            //user.idとcomment.user_idが同じならsetCommentInfoにcommentedUser.idを入れる
-                                            const commentedUser = users.find(
-                                                (user) =>
-                                                    user.id === comment.user_id
-                                            );
-                                            if (commentedUser) {
-                                                navigate(
-                                                    "/comment_and_reply_page"
-                                                );
-                                                setCommentInfo({
-                                                    id: comment.id,
-                                                    user_id: comment.user_id,
-                                                    admin_id: null,
-                                                    user_name:
-                                                        commentedUser.name,
-                                                    text: comment.text,
-                                                });
-                                            }
-                                        }}
+                                    <CommentDisply
+                                        color="orange"
+                                        users={users}
+                                        replies={replies}
+                                        comment={comment}
                                     >
                                         <Text fontWeight="bold">{`ユーザーネーム: ${
                                             users.find(
@@ -105,59 +75,16 @@ export const PostAndCommentPage: FC = memo(() => {
                                                     user.id === comment.user_id
                                             )?.name
                                         }`}</Text>
-                                        <p>{`コメント内容: ${comment.text}`}</p>
-                                        <Flex
-                                            align="center"
-                                            justifyContent="center"
-                                            color="orange.500"
-                                        >
-                                            <ChatIcon
-                                                boxSize={6}
-                                                ml={4}
-                                                mr={1}
-                                            />
-                                            <Text fontWeight="bold">
-                                                {commentReplies}
-                                            </Text>
-                                        </Flex>
-                                    </Link>
+                                    </CommentDisply>
                                 ) : comment.admin_id !== null ? ( // 管理者コメントの場合
-                                    <Link
-                                        m={1}
-                                        style={{
-                                            border: "3px solid teal",
-                                            padding: "8px",
-                                            borderRadius: "4px",
-                                            display: "inline-block",
-                                        }}
-                                        onClick={() => {
-                                            navigate("/comment_and_reply_page");
-                                            setCommentInfo({
-                                                id: comment.id,
-                                                user_id: null,
-                                                admin_id: comment.admin_id,
-                                                user_name: "",
-                                                text: comment.text,
-                                            });
-                                        }}
+                                    <CommentDisply
+                                        color="teal"
+                                        users={users}
+                                        replies={replies}
+                                        comment={comment}
                                     >
                                         <Text fontWeight="bold">管理者</Text>
-                                        <p>{`コメント内容: ${comment.text}`}</p>
-                                        <Flex
-                                            align="center"
-                                            justifyContent="center"
-                                            color="teal"
-                                        >
-                                            <ChatIcon
-                                                boxSize={6}
-                                                ml={4}
-                                                mr={1}
-                                            />
-                                            <Text fontWeight="bold">
-                                                {commentReplies}
-                                            </Text>
-                                        </Flex>
-                                    </Link>
+                                    </CommentDisply>
                                 ) : null}
                             </div>
                         )}

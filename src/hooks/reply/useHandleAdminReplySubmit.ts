@@ -70,7 +70,7 @@ export const useHandleAdminReplySubmit = () => {
                     setText("");
                 });
         },
-        [adminId.id]
+        [adminId.id, showMessage]
     );
     return { handleAdminReplySubmit };
 };

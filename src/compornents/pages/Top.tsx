@@ -74,7 +74,7 @@ export const Top: FC = memo(() => {
                             key={category}
                             fontSize="lg"
                             onClick={() => {
-                                setPostInfo({category: category});
+                                setPostInfo({ category: category });
                                 navigate("post_list_page");
                             }}
                         >
