@@ -6,6 +6,7 @@ import { reply } from "../../types/reply";
 import { user } from "../../types/user";
 import { useRecoilValue } from "recoil";
 import { adminInfo } from "../../store/adminInfo";
+import { useMessage } from "../useMessage";
 
 type Props = {
     text: string;
@@ -18,10 +19,18 @@ type Props = {
 
 export const useHandleAdminReplySubmit = () => {
     const adminId = useRecoilValue(adminInfo);
+    const { showMessage } = useMessage();
 
     const handleAdminReplySubmit = useCallback(
         (props: Props) => {
-            const { text, setText, commentInfo, setReplies, setUsers, setReplyError } = props;
+            const {
+                text,
+                setText,
+                commentInfo,
+                setReplies,
+                setUsers,
+                setReplyError,
+            } = props;
 
             const accessToken = Cookies.get("access-token");
             const client = Cookies.get("client");
@@ -36,12 +45,16 @@ export const useHandleAdminReplySubmit = () => {
                     {
                         headers: {
                             "access-token": accessToken!,
-                            "client": client!,
-                            "uid": uid!,
+                            client: client!,
+                            uid: uid!,
                         },
                     }
                 )
                 .then((res) => {
+                    showMessage({
+                        title: "返信しました",
+                        status: "success",
+                    });
                     setReplyError(res.data.errors);
                     axios
                         .get(`http://localhost:3000/api/v1/user/replies`)

@@ -2,6 +2,7 @@ import axios from "axios";
 import { Dispatch, SetStateAction, useCallback } from "react";
 import { reply } from "../../types/reply";
 import { user } from "../../types/user";
+import { useMessage } from "../useMessage";
 
 type Props = {
     name: string;
@@ -15,6 +16,8 @@ type Props = {
 };
 
 export const useHandleUserReplySubmit = () => {
+    const { showMessage } = useMessage();
+
     const handleUserReplySubmit = useCallback((props: Props) => {
         const {
             name,
@@ -40,6 +43,10 @@ export const useHandleUserReplySubmit = () => {
                 }
             )
             .then((res) => {
+                showMessage({
+                    title: "返信しました",
+                    status: "success",
+                });
                 console.log(res.data.error);
                 setNameAndReplyError(res.data.error);
                 axios

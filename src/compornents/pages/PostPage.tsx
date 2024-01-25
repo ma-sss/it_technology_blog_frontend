@@ -7,6 +7,7 @@ import Cookies from "js-cookie";
 import { adminInfo } from "../../store/adminInfo";
 import { useNavigate } from "react-router-dom";
 import { ErrorDisplay } from "../molecules/ErrorDisply";
+import { useMessage } from "../../hooks/useMessage";
 
 export const PostPage: FC = memo(() => {
     const [titleAndContentError, setTitleAndContentError] = useState([]);
@@ -17,6 +18,8 @@ export const PostPage: FC = memo(() => {
     const navigate = useNavigate();
 
     const adminId = useRecoilValue(adminInfo);
+
+    const { showMessage } = useMessage();
 
     const accessToken = Cookies.get("access-token");
     const client = Cookies.get("client");
@@ -43,11 +46,12 @@ export const PostPage: FC = memo(() => {
                 console.log(res.data);
                 setTitleAndContentError(res.data.error);
                 if (res.data.status === "SUCCESS") {
+                    showMessage({ title: "投稿しました", status: "success" });
                     navigate("/");
                 }
             })
             .catch((error) => console.log(error.data));
-    }, [accessToken, adminId, client, content, navigate, title, uid, category]);
+    }, [accessToken, adminId, client, content, navigate, title, uid, category, showMessage]);
 
     return (
         <Box p={4}>
