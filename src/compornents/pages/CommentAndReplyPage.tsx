@@ -14,6 +14,7 @@ import axios from "axios";
 import { user } from "../../types/user";
 import { ReplyDisplyForAdmin } from "../molecules/ReplyDisplyForAdmin";
 import { ReplyDisplyForUser } from "../molecules/ReplyDisplyForUser";
+import { userIndexAuth } from "../../Auth";
 
 export const CommentAndReplyPage: FC = memo(() => {
     const [name, setName] = useState("");
@@ -38,14 +39,22 @@ export const CommentAndReplyPage: FC = memo(() => {
 
     //replyとuserを全て持ってくる
     useEffect(() => {
-        axios
-            .get(`http://localhost:3000/api/v1/user/replies`)
-            .then((res) => setReplies(res.data.data))
-            .catch((res) => console.log(res));
-        axios
-            .get(`http://localhost:3000/api/v1/users`)
-            .then((res) => setUsers(res.data.data))
-            .catch((res) => console.log(res));
+        const fetchData = async () => {
+            try {
+                // Auth.tsを使いたいが上手く表示できないため使用していない(返信を全て取得)
+                const repliesRes = await axios.get(
+                    "http://localhost:3000/api/v1/user/replies"
+                );
+                setReplies(repliesRes.data.data);
+
+                const usersRes = await userIndexAuth();
+                setUsers(usersRes.data.data);
+            } catch (error) {
+                console.error("エラーが発生しました:", error);
+            }
+        };
+
+        fetchData();
     }, []);
 
     return (

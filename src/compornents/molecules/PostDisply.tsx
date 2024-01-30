@@ -2,6 +2,8 @@ import { FC, memo } from "react";
 import { Box, Link, Text, VStack } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
+import parse from "html-react-parser";
+
 import { adminInfo } from "../../store/adminInfo";
 
 type Props = {
@@ -20,7 +22,7 @@ export const PostDisply: FC<Props> = memo((props) => {
                 <Text fontSize="2xl" fontWeight="bold">
                     {postInfo.title}
                 </Text>
-                <Text fontSize="lg">{postInfo.content}</Text>
+                <div>{parse(postInfo.content)}</div>
             </VStack>
         </Link>
     ) : (

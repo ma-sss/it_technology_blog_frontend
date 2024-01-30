@@ -29,14 +29,24 @@ export const PostListPage: FC = memo(() => {
     const setPostInfo = useSetRecoilState(showPostInfo);
 
     useEffect(() => {
-        axios
-            .get("http://localhost:3000/api/v1/admin/posts")
-            .then((res) => setPosts(res.data.data))
-            .catch((res) => console.log(res));
-        axios
-            .get("http://localhost:3000/api/v1/user/comments")
-            .then((res) => setComments(res.data.data))
-            .catch((res) => console.log(res));
+        const fetchData = async () => {
+            try {
+                // Auth.tsを使いたいが上手く表示できないため使用していない(postを全て取得)
+                const postsRes = await axios.get(
+                    "http://localhost:3000/api/v1/admin/posts"
+                );
+                setPosts(postsRes.data.data);
+
+                // Auth.tsを使いたいが上手く表示できないため使用していない(commentを全て取得)
+                const commentsRes = await axios.get(
+                    "http://localhost:3000/api/v1/user/comments"
+                );
+                setComments(commentsRes.data.data);
+            } catch (error) {
+                console.log(error);
+            }
+        };
+        fetchData();
     }, []);
 
     console.log(postInfo.category);

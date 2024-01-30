@@ -41,6 +41,7 @@ export const ReplyDisplyForAdmin: FC<Props> = memo((props) => {
                         user_name: repliedUser.name,
                         text: reply.text,
                     });
+                    navigate("/reply_edit_page");
                 } else {
                     setReplyInfo({
                         id: reply.id,

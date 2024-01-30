@@ -1,62 +1,47 @@
 import { useCallback } from "react";
-import axios from "axios";
-import Cookies from "js-cookie";
 import { useRecoilState } from "recoil";
 import { showCommentInfo } from "../../store/showCommentInfo";
 import { commentInfoType } from "../../types/commentInfoType";
 import { useMessage } from "../useMessage";
+import {
+    adminCommentEditAuth,
+    adminCommentShowAuth,
+    userCommentEditAuth,
+    userCommentShowAuth,
+} from "../../Auth";
 
 export const useHandleCommentEdit = () => {
     const [commentInfo, setCommentInfo] = useRecoilState(showCommentInfo);
 
     const { showMessage } = useMessage();
 
-    const HandleCommentEdit = useCallback(() => {
-        const accessToken = Cookies.get("access-token");
-        const client = Cookies.get("client");
-        const uid = Cookies.get("uid");
-
+    const HandleCommentEdit = useCallback(async () => {
         const endpoint = commentInfo.user_id
-            ? `http://localhost:3000/api/v1/user/comments/${commentInfo.id}`
-            : `http://localhost:3000/api/v1/admin/comments/${commentInfo.id}`;
+            ? userCommentEditAuth(commentInfo, { text: commentInfo.text })
+            : adminCommentEditAuth(commentInfo, { text: commentInfo.text });
 
-        axios
-            .patch(
-                endpoint,
-                {
-                    text: commentInfo.text,
-                },
-                {
-                    headers: {
-                        "access-token": accessToken!,
-                        client: client!,
-                        uid: uid!,
-                    },
-                }
-            )
-            .then(() => {
+        try {
+            const res = await endpoint;
+            console.log(res.data.status);
+            res.data.status === "SUCCESS" &&
                 showMessage({
                     title: "コメントを編集しました",
                     status: "success",
                 });
-                const fetchEndpoint = commentInfo.user_id
-                    ? `http://localhost:3000/api/v1/user/comments/${commentInfo.id}`
-                    : `http://localhost:3000/api/v1/admin/comments/${commentInfo.id}`;
+            const fetchEndpoint = commentInfo.user_id
+                ? userCommentShowAuth(commentInfo)
+                : adminCommentShowAuth(commentInfo);
 
-                axios
-                    .get(fetchEndpoint)
-                    .then((res) => {
-                        console.log(res)
-                        setCommentInfo((prevCommentInfo: commentInfoType) => ({
-                            ...prevCommentInfo,
-                            text: res.data.data.text
-                        }));
-                        window.history.back();
-                    })
-                    .catch((res) => console.log(res));
-            })
-            .catch((error) => console.log(error));
-    }, [commentInfo.id, commentInfo.text, commentInfo.user_id, setCommentInfo, showMessage]);
+            const commentRes = await fetchEndpoint;
+            setCommentInfo((prevCommentInfo: commentInfoType) => ({
+                ...prevCommentInfo,
+                text: commentRes.data.data.text,
+            }));
+            window.history.back();
+        } catch (error) {
+            console.log(error);
+        }
+    }, [commentInfo, setCommentInfo, showMessage]);
 
     return { HandleCommentEdit };
 };

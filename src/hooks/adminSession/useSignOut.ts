@@ -2,40 +2,30 @@ import { useSetRecoilState } from "recoil";
 import Cookies from "js-cookie";
 
 import { adminInfo } from "../../store/adminInfo";
-import axios from "axios";
 import { useMessage } from "../useMessage";
 import { useCallback } from "react";
+import { signOutAuth } from "../../Auth";
 
 export const useSignOut = () => {
     const setAdminId = useSetRecoilState(adminInfo);
 
     const { showMessage } = useMessage();
 
-    const accessToken = Cookies.get("access-token");
-    const client = Cookies.get("client");
-    const uid = Cookies.get("uid");
+    const signOut = useCallback(async () => {
+        try {
+            const res = await signOutAuth();
 
-    const signOut = useCallback(() => {
-        setAdminId({ id: null });
-
-        axios
-            .delete("http://localhost:3000/api/v1/admin/sign_out", {
-                headers: {
-                    "access-token": accessToken!,
-                    "client": client!,
-                    "uid": uid!,
-                },
-            })
-            .then((res) => {
-                console.log(res);
-
-                Cookies.remove("uid");
-                Cookies.remove("client");
-                Cookies.remove("access-token");
+            console.log(res);
+            Cookies.remove("uid");
+            Cookies.remove("client");
+            Cookies.remove("access-token");
+            setAdminId({ id: null });
+            res.status === 200 &&
                 showMessage({ title: "ログアウトしました", status: "warning" });
-            })
-            .catch((error) => console.log(error));
-    },[accessToken, client, setAdminId, uid, showMessage])
+        } catch (error) {
+            console.log(error);
+        }
+    }, [setAdminId, showMessage]);
 
     return { signOut };
 };

@@ -2,10 +2,10 @@ import { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSetRecoilState } from "recoil";
 import Cookies from "js-cookie";
-import axios from "axios";
 
 import { adminInfo } from "../../store/adminInfo";
 import { useMessage } from "../useMessage";
+import { signInAuth } from "../../Auth";
 
 export const useAdminAuth = () => {
     const navigate = useNavigate();
@@ -15,34 +15,33 @@ export const useAdminAuth = () => {
     const { showMessage } = useMessage();
 
     const login = useCallback(
-        (email: string, password: string) => {
-            axios
-                .post(
-                    "http://localhost:3000/api/v1/admin/sign_in",
-                    {
-                        email: email,
-                        password: password,
-                    },
-                    { withCredentials: true }
-                )
-                .then((res) => {
-                    console.log(res.data.data.id);
+        async (email: string, password: string) => {
+            try {
+                const res = await signInAuth({ email, password });
 
-                    const accessToken = res.headers["access-token"];
-                    const client = res.headers["client"];
-                    const uid = res.headers["uid"];
+                console.log(res.data.data.id);
 
-                    Cookies.set("access-token", accessToken);
-                    Cookies.set("client", client);
-                    Cookies.set("uid", uid);
+                const accessToken = res.headers["access-token"];
+                const client = res.headers["client"];
+                const uid = res.headers["uid"];
 
-                    setAdminId({id: res.data.data.id});
-                    showMessage({ title: "ログインしました", status: "success"})
-                    navigate("/");
-                })
-                .catch((error) => console.log(error));
+                Cookies.set("access-token", accessToken);
+                Cookies.set("client", client);
+                Cookies.set("uid", uid);
+
+                setAdminId({ id: res.data.data.id });
+                res.status === 200 &&
+                    showMessage({
+                        title: "ログインしました",
+                        status: "success",
+                    });
+                navigate("/");
+            } catch (error) {
+                console.log(error);
+            }
         },
         [navigate, setAdminId, showMessage]
     );
+
     return { login };
 };

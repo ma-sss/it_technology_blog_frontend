@@ -14,6 +14,7 @@ import { PostDisply } from "../molecules/PostDisply";
 import { user } from "../../types/user";
 import { reply } from "../../types/reply";
 import { CommentDisply } from "../molecules/CommentDisply";
+import { userIndexAuth } from "../../Auth";
 
 export const PostAndCommentPage: FC = memo(() => {
     const [commentError, setCommentError] = useState<string[]>([]);
@@ -35,19 +36,29 @@ export const PostAndCommentPage: FC = memo(() => {
 
     // commentとuserを全て持ってくる
     useEffect(() => {
-        axios
-            .get(`http://localhost:3000/api/v1/user/comments`)
-            .then((res) => setComments(res.data.data))
-            .catch((error) => console.log(error));
-        axios
-            .get(`http://localhost:3000/api/v1/user/replies`)
-            .then((res) => setReplies(res.data.data))
-            .catch((res) => console.log(res));
-        axios
-            .get(`http://localhost:3000/api/v1/users`)
-            .then((res) => setUsers(res.data.data))
-            .catch((error) => console.log(error));
-    }, [setComments, postInfo.id]);
+        const fetchData = async () => {
+            try {
+                // Auth.tsを使いたいが上手く表示できないため使用していない(commentを全て取得)
+                const commentsRes = await axios.get(
+                    "http://localhost:3000/api/v1/user/comments"
+                );
+                setComments(commentsRes.data.data);
+
+                // Auth.tsを使いたいが上手く表示できないため使用していない(replyを全て取得)
+                const repliesRes = await axios.get(
+                    "http://localhost:3000/api/v1/user/replies"
+                );
+                setReplies(repliesRes.data.data);
+
+                const usersRes = await userIndexAuth();
+                setUsers(usersRes.data.data);
+            } catch (error) {
+                console.error("エラーが発生しました:", error);
+            }
+        };
+
+        fetchData();
+    }, [postInfo.id]);
 
     return (
         <>

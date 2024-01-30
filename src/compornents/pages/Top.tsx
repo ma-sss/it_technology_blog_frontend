@@ -1,10 +1,11 @@
 import { FC, memo, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Box, Link, Text, VStack } from "@chakra-ui/react";
-import axios from "axios";
+
 import { post } from "../../types/post";
 import { useSetRecoilState } from "recoil";
 import { showPostInfo } from "../../store/showPostInfo";
+import { postIndexAuth } from "../../Auth";
 
 export const Top: FC = memo(() => {
     const [posts, setPosts] = useState<Array<post>>([]);
@@ -20,13 +21,17 @@ export const Top: FC = memo(() => {
     }, {} as Record<string, number>);
 
     useEffect(() => {
-        axios
-            .get("http://localhost:3000/api/v1/admin/posts")
-            .then((res) => {
+        const fetchData = async () => {
+            try {
+                const res = await postIndexAuth();
                 console.log(res.data.data[0].category);
                 setPosts(res.data.data);
-            })
-            .catch((res) => console.log(res));
+            } catch (error) {
+                console.log(error);
+            }
+        };
+
+        fetchData();
     }, []);
 
     const getJapaneseCategoryLabel = (category: string): string => {
@@ -49,16 +54,17 @@ export const Top: FC = memo(() => {
                     ようこそ!IT技術ブログへ🚀
                 </Text>
                 <Text>
-                    こちらでは、このウェブアプリ自体の作り方や技術的なトピックを段階ごとに初心者の方でも理解できるように、わかりやすく解説しています。
+                    こちらでは、このウェブアプリ自体の作り方や技術を
+                    <br />
+                    初心者の方でも理解しやすいように、わかりやすく解説しています。
                 </Text>
                 <Text fontSize="xl" fontWeight="bold">
-                    ログインなしで投稿の閲覧やコメントと返信の投稿が可能
+                    ログインなしで投稿の閲覧やコメントと返信の投稿が可能です！
                 </Text>
                 <Text>
-                    仮の投稿を3つ用意しています。まずはその仮の投稿にコメントしたり、コメントに対して返信したりして、自由に触ってどのようなブログなのか見てみてください。（管理者ユーザーのみが記事の投稿やコメント、返信を編集・削除することができます。）
-                </Text>
-                <Text>
-                    ここで得られる知識やスキルを活かして、あなたのIT技術が成長することを願っています。一緒にプログラミングの世界を楽しみましょう!!!💻✨
+                    順序通りに進めれば、このウェブアプリと同じものを作ることができます。
+                    <br />
+                    是非、技術の理解を深めながら、楽しく学んでいってください！！！
                 </Text>
             </VStack>
             <VStack justify="center">

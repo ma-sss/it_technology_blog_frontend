@@ -3,6 +3,7 @@ import { Dispatch, SetStateAction, useCallback } from "react";
 import { reply } from "../../types/reply";
 import { user } from "../../types/user";
 import { useMessage } from "../useMessage";
+import { userIndexAuth, userReplyAuth } from "../../Auth";
 
 type Props = {
     name: string;
@@ -18,53 +19,55 @@ type Props = {
 export const useHandleUserReplySubmit = () => {
     const { showMessage } = useMessage();
 
-    const handleUserReplySubmit = useCallback((props: Props) => {
-        const {
-            name,
-            setName,
-            text,
-            setText,
-            commentInfo,
-            setReplies,
-            setUsers,
-            setNameAndReplyError,
-        } = props;
+    const handleUserReplySubmit = useCallback(
+        async (props: Props) => {
+            const {
+                name,
+                setName,
+                text,
+                setText,
+                commentInfo,
+                setReplies,
+                setUsers,
+                setNameAndReplyError,
+            } = props;
 
-        axios
-            .post(
-                `http://localhost:3000/api/v1/user/comment/${commentInfo.id}/reply`,
-                {
+            try {
+                const res = await userReplyAuth(commentInfo, {
                     reply: {
                         text: text,
                     },
                     user: {
                         name: name,
                     },
-                }
-            )
-            .then((res) => {
-                showMessage({
-                    title: "返信しました",
-                    status: "success",
                 });
+                res.data.reply.status === "SUCCESS" &&
+                    showMessage({
+                        title: "返信しました",
+                        status: "success",
+                    });
                 console.log(res.data.error);
                 setNameAndReplyError(res.data.error);
-                axios
-                    .get(`http://localhost:3000/api/v1/user/replies`)
-                    .then((res) => {
-                        setReplies(res.data.data);
-                        console.log(res.data.data);
-                    })
-                    .catch((error) => console.log(error));
-                axios
-                    .get(`http://localhost:3000/api/v1/users`)
-                    .then((res) => setUsers(res.data.data))
-                    .catch((res) => console.log(res));
+
+                const replyRes = await axios.get(
+                    // Auth.tsを使いたいが上手く表示できないため使用していない(userが返信時の返信取得)
+                    "http://localhost:3000/api/v1/user/replies"
+                );
+                setReplies(replyRes.data.data);
+                console.log(replyRes.data.data);
+
+                const userRes = await userIndexAuth();
+                setUsers(userRes.data.data);
+                console.log(userRes.data.data);
+
                 setName("");
                 setText("");
-            })
-            .catch((error) => console.log(error));
-    }, [showMessage]);
+            } catch (error) {
+                console.log(error);
+            }
+        },
+        [showMessage]
+    );
 
     return { handleUserReplySubmit };
 };

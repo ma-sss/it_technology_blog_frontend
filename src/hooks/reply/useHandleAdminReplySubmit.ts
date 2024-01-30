@@ -7,6 +7,7 @@ import { user } from "../../types/user";
 import { useRecoilValue } from "recoil";
 import { adminInfo } from "../../store/adminInfo";
 import { useMessage } from "../useMessage";
+import { adminReplyAuth, userIndexAuth } from "../../Auth";
 
 type Props = {
     text: string;
@@ -22,7 +23,7 @@ export const useHandleAdminReplySubmit = () => {
     const { showMessage } = useMessage();
 
     const handleAdminReplySubmit = useCallback(
-        (props: Props) => {
+        async (props: Props) => {
             const {
                 text,
                 setText,
@@ -32,45 +33,33 @@ export const useHandleAdminReplySubmit = () => {
                 setReplyError,
             } = props;
 
-            const accessToken = Cookies.get("access-token");
-            const client = Cookies.get("client");
-            const uid = Cookies.get("uid");
-
-            axios
-                .post(
-                    `http://localhost:3000/api/v1/admin/${adminId.id}/comment/${commentInfo.id}/reply`,
-                    {
-                        text: text,
-                    },
-                    {
-                        headers: {
-                            "access-token": accessToken!,
-                            client: client!,
-                            uid: uid!,
-                        },
-                    }
-                )
-                .then((res) => {
+            try {
+                const res = await adminReplyAuth(adminId, commentInfo, {
+                    text,
+                });
+                res.data.status === "SUCCESS" &&
                     showMessage({
                         title: "返信しました",
                         status: "success",
                     });
-                    setReplyError(res.data.errors);
-                    axios
-                        .get(`http://localhost:3000/api/v1/user/replies`)
-                        .then((res) => {
-                            setReplies(res.data.data);
-                            console.log(res.data.data);
-                        })
-                        .catch((error) => console.log(error));
-                    axios
-                        .get(`http://localhost:3000/api/v1/users`)
-                        .then((res) => setUsers(res.data.data))
-                        .catch((res) => console.log(res));
-                    setText("");
-                });
+                setReplyError(res.data.errors);
+
+                const replyRes = await axios.get(
+                    // Auth.tsを使いたいが上手く表示できないため使用していない(admin返信時の返信取得)
+                    "http://localhost:3000/api/v1/user/replies"
+                );
+                setReplies(replyRes.data.data);
+                console.log(res.data.data);
+
+                const userRes = await userIndexAuth();
+                setUsers(userRes.data.data);
+                
+                setText("");
+            } catch (error) {
+                console.log(error);
+            }
         },
-        [adminId.id, showMessage]
+        [adminId, showMessage]
     );
     return { handleAdminReplySubmit };
 };
