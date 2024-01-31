@@ -3,6 +3,7 @@ import { Dispatch, SetStateAction, useCallback } from "react";
 import { comment } from "../../types/comment";
 import { useMessage } from "../useMessage";
 import { adminCommentAuth } from "../../Auth";
+import { urlOnlyClient } from "../../Client";
 
 type Props = {
     postInfo: { id: number; title: string; content: string };
@@ -35,9 +36,9 @@ export const useHandleAdmincommentSubmit = () => {
                 console.log(res.data.status);
                 setCommentError(res.data.data);
 
-                // Auth.tsを使いたいが上手く表示できないため使用していない(Adminコメント後のcomment取得)
+                // Client.tsとAuth.tsを使いたいが非同期処理と相性が悪い？せいで上手く表示できないためClient.tsから直接urlを取得(Adminコメント後のcomment取得)
                 const commentRes = await axios.get(
-                    "http://localhost:3000/api/v1/user/comments"
+                    `${urlOnlyClient}/user/comments`
                 );
                 setComments(commentRes.data.data);
 

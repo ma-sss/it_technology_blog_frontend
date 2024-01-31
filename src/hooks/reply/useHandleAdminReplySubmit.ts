@@ -8,6 +8,7 @@ import { useRecoilValue } from "recoil";
 import { adminInfo } from "../../store/adminInfo";
 import { useMessage } from "../useMessage";
 import { adminReplyAuth, userIndexAuth } from "../../Auth";
+import { urlOnlyClient } from "../../Client";
 
 type Props = {
     text: string;
@@ -45,8 +46,8 @@ export const useHandleAdminReplySubmit = () => {
                 setReplyError(res.data.errors);
 
                 const replyRes = await axios.get(
-                    // Auth.tsを使いたいが上手く表示できないため使用していない(admin返信時の返信取得)
-                    "http://localhost:3000/api/v1/user/replies"
+                    // Client.tsとAuth.tsを使いたいが非同期処理と相性が悪い？せいで上手く表示できないためClient.tsから直接urlを取得(admin返信時の返信取得)
+                    `${urlOnlyClient}/user/replies`
                 );
                 setReplies(replyRes.data.data);
                 console.log(res.data.data);

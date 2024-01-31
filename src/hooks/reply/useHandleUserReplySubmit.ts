@@ -4,6 +4,7 @@ import { reply } from "../../types/reply";
 import { user } from "../../types/user";
 import { useMessage } from "../useMessage";
 import { userIndexAuth, userReplyAuth } from "../../Auth";
+import { urlOnlyClient } from "../../Client";
 
 type Props = {
     name: string;
@@ -50,8 +51,8 @@ export const useHandleUserReplySubmit = () => {
                 setNameAndReplyError(res.data.error);
 
                 const replyRes = await axios.get(
-                    // Auth.tsを使いたいが上手く表示できないため使用していない(userが返信時の返信取得)
-                    "http://localhost:3000/api/v1/user/replies"
+                    // Client.tsとAuth.tsを使いたいが非同期処理と相性が悪い？せいで上手く表示できないためClient.tsから直接urlを取得(userが返信時の返信取得)
+                    `${urlOnlyClient}/user/replies`
                 );
                 setReplies(replyRes.data.data);
                 console.log(replyRes.data.data);

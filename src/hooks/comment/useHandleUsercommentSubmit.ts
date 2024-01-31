@@ -4,6 +4,7 @@ import { comment } from "../../types/comment";
 import { user } from "../../types/user";
 import { useMessage } from "../useMessage";
 import { userCommentAuth, userIndexAuth } from "../../Auth";
+import { urlOnlyClient } from "../../Client";
 
 type Props = {
     postInfo: { id: number; title: string; content: string };
@@ -44,9 +45,9 @@ export const useHandleUserCommentSubmit = () => {
                 });
                 setNameAndCommentError(res.data.error);
 
-                // Auth.tsを使いたいが上手く表示できないため使用していない(userコメント時のcomment取得)
+                // Client.tsとAuth.tsを使いたいが非同期処理と相性が悪い？せいで上手く表示できないためClient.tsから直接urlを取得(userコメント時のcomment取得)
                 const commentRes = await axios.get(
-                    "http://localhost:3000/api/v1/user/comments"
+                    `${urlOnlyClient}/user/comments`
                 );
                 setComments(commentRes.data.data);
 

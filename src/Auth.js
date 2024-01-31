@@ -1,5 +1,5 @@
 import Cookies from "js-cookie";
-import Client from "./Clienet";
+import { Client } from "./Client";
 
 // サインイン
 export const signInAuth = (params) => {

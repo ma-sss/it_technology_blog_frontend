@@ -15,6 +15,7 @@ import { user } from "../../types/user";
 import { ReplyDisplyForAdmin } from "../molecules/ReplyDisplyForAdmin";
 import { ReplyDisplyForUser } from "../molecules/ReplyDisplyForUser";
 import { userIndexAuth } from "../../Auth";
+import { urlOnlyClient } from "../../Client";
 
 export const CommentAndReplyPage: FC = memo(() => {
     const [name, setName] = useState("");
@@ -41,9 +42,9 @@ export const CommentAndReplyPage: FC = memo(() => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                // Auth.tsを使いたいが上手く表示できないため使用していない(返信を全て取得)
+                // Client.tsとAuth.tsを使いたいが非同期処理と相性が悪い？せいで上手く表示できないためClient.tsから直接urlを取得(返信を全て取得)
                 const repliesRes = await axios.get(
-                    "http://localhost:3000/api/v1/user/replies"
+                    `${urlOnlyClient}/user/replies`
                 );
                 setReplies(repliesRes.data.data);
 

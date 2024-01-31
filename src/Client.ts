@@ -9,11 +9,12 @@ const options = {
 };
 
 // URLの共通部分を設定
-const Client = applyCaseMiddleware(
+export const Client = applyCaseMiddleware(
     axios.create({
         baseURL: "http://localhost:3000/api/v1",
     }),
     options
 );
 
-export default Client;
+//非同期処理との相性が悪い？ため上のClientとAuth.tsが使えないところに使用（原因不明・修正要す）
+export const urlOnlyClient = "http://localhost:3000/api/v1";

@@ -15,6 +15,7 @@ import { user } from "../../types/user";
 import { reply } from "../../types/reply";
 import { CommentDisply } from "../molecules/CommentDisply";
 import { userIndexAuth } from "../../Auth";
+import { urlOnlyClient } from "../../Client";
 
 export const PostAndCommentPage: FC = memo(() => {
     const [commentError, setCommentError] = useState<string[]>([]);
@@ -34,19 +35,21 @@ export const PostAndCommentPage: FC = memo(() => {
     const { handleAdminCommentSubmit } = useHandleAdmincommentSubmit();
     const { handleUserCommentSubmit } = useHandleUserCommentSubmit();
 
+    
+
     // commentとuserを全て持ってくる
     useEffect(() => {
         const fetchData = async () => {
             try {
-                // Auth.tsを使いたいが上手く表示できないため使用していない(commentを全て取得)
+                // Client.tsとAuth.tsを使いたいが非同期処理と相性が悪い？せいで上手く表示できないためClient.tsから直接urlを取得(commentを全て取得)
                 const commentsRes = await axios.get(
-                    "http://localhost:3000/api/v1/user/comments"
+                    `${urlOnlyClient}/user/comments`
                 );
                 setComments(commentsRes.data.data);
 
-                // Auth.tsを使いたいが上手く表示できないため使用していない(replyを全て取得)
+                // Client.tsとAuth.tsを使いたいが非同期処理と相性が悪い？せいで上手く表示できないためClient.tsから直接urlを取得(replyを全て取得)
                 const repliesRes = await axios.get(
-                    "http://localhost:3000/api/v1/user/replies"
+                    `${urlOnlyClient}/user/replies`
                 );
                 setReplies(repliesRes.data.data);
 

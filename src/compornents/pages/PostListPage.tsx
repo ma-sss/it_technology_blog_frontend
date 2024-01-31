@@ -17,6 +17,7 @@ import { useRecoilValue, useSetRecoilState } from "recoil";
 import { comment } from "../../types/comment";
 import { PrimaryButton } from "../atoms/button/PrimaryButton";
 import { NumberAndSpeechBubbble } from "../molecules/NumberAndSpeechBubble";
+import { urlOnlyClient } from "../../Client";
 
 export const PostListPage: FC = memo(() => {
     const [posts, setPosts] = useState<Array<post>>([]);
@@ -31,15 +32,15 @@ export const PostListPage: FC = memo(() => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                // Auth.tsを使いたいが上手く表示できないため使用していない(postを全て取得)
+                // Client.tsとAuth.tsを使いたいが非同期処理と相性が悪い？せいで上手く表示できないためClient.tsから直接urlを取得(postを全て取得)
                 const postsRes = await axios.get(
-                    "http://localhost:3000/api/v1/admin/posts"
+                    `${urlOnlyClient}/admin/posts`
                 );
                 setPosts(postsRes.data.data);
 
-                // Auth.tsを使いたいが上手く表示できないため使用していない(commentを全て取得)
+                // Client.tsとAuth.tsを使いたいが非同期処理と相性が悪い？せいで上手く表示できないためClient.tsから直接urlを取得(commentを全て取得)
                 const commentsRes = await axios.get(
-                    "http://localhost:3000/api/v1/user/comments"
+                    `${urlOnlyClient}/user/comments`
                 );
                 setComments(commentsRes.data.data);
             } catch (error) {
